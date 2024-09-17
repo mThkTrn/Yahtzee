@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%include "partial/header.html"%}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yahtzee: Login</title>
+</head>
+<body>
+
+<h1>Login</h1>
+
+<form action="game" method="get">
+
+    <label for="username_input">Username</label>
+    <input type="text" name = "username_input" id = "username_input">
+
+    <label for="password_input">Password</label>
+    <input type="password" name = "password_input" id = "password_input">
+
+    <input type="submit" id = "login_submit">
+</form>
+{%include "partial/footer.html"%}
+</body>
+</html>
