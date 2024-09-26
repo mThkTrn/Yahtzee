@@ -12,14 +12,14 @@ def create_app(config=None):
         password = request.args.get("password_input")
         return render_template("game.html", username = username, password = password)
 
-    @app.route("/login")
+    @app.route("/")
     def login():
         return render_template("login.html")
     
     return app
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", 8080))
     app = create_app()
     app.run(host="0.0.0.0", port=port)
 

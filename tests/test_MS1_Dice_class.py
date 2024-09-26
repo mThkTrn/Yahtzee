@@ -189,7 +189,8 @@ class Dice_Helper_Function_Tests(unittest.TestCase):
             self.assertTrue(dice_counts[self.image_names[i]] > 0.08*self.trials*3*5)#EV: ~0.17
             self.assertTrue(dice_counts[self.image_names[i]] <= self.trials*3*5)
 
-       for _ in range(self.trials): #rolling with reserved dice       
+       for _ in range(self.trials): #rolling with reserved dice 
+            self.browser.execute_script(f"window.dice.reset();");
             new_values=[]          
             for i in range(5):
                 new_values.append(random.choice([1,2,3,4,5,6])) #random dice values

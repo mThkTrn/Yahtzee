@@ -6,17 +6,18 @@ class Dice{
         this.photo_names=["blank", "one", "two", "three", "four", "five", "six"]
         this.rolls_remaining = 3
         this.dice = [0, 0, 0, 0, 0]
+        this.counts = [0, 0, 0, 0, 0, 0]
     }
 
     getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max-min))+min;
+        return Math.floor(Math.random() * ((max+1)-min))+min;
       }
     /**
      * Returns the number of rolls remaining for a turn
      * @return {Number} an integer representing the number of rolls remaining for a turn
     */
     get_rolls_remaining(){
-        return this.rolls_remaining
+        return parseInt(this.rolls_remaining_element.innerHTML)
     }
 
     /**
@@ -47,11 +48,11 @@ class Dice{
      * @return {Array} an array of six integers representing counts of the six die faces
     */
     get_counts(){
-        out = [0, 0, 0, 0, 0, 0]
+        this.counts = [0, 0, 0, 0, 0, 0]
         for (dice of this.dice) {
-            out[dice-1]++
+            this.counts[dice-1]++
         }
-        return out
+        return this.counts
     }
 
     /**
@@ -60,14 +61,18 @@ class Dice{
      * <br> Uses this.set to update dice
     */
     roll(){
-        for (let i = 1; i < this.dice.length; i++){
-            this.dice[i] = this.getRandomInt(1, 6)
+        for (let i = 0; i < this.dice.length; i++){
+            console.log(this.dice_elements[i].classList)
+            if (Array.from(this.dice_elements[i].classList).includes("reserved")){
+                this.dice[i] = -1
+            }
+            else{
+                this.dice[i] = this.getRandomInt(1, 6)
+            }
         }
-
         this.rolls_remaining--
 
         this.set(this.dice, this.rolls_remaining)
-
     }
 
     /**
@@ -79,6 +84,11 @@ class Dice{
         this.rolls_remaining = 3
         this.dice = [0, 0, 0, 0, 0]
         this.set(this.dice, this.rolls_remaining)
+        for (let idie of this.dice_elements){
+            if (Array.from(idie.classList).includes("reserved")){
+                idie.classList.remove("reserved")
+            }
+        }
     }
 
     /**
@@ -90,7 +100,9 @@ class Dice{
      * @param {Object} element the <img> element representing the die to reserve
     */
     reserve(die_element){
-        die_element.classlist.toggle("reserved")
+        if (this.dice[this.dice_elements.indexOf(die_element)] != 0){
+            die_element.classList.toggle("reserved")
+        }
     }
 
     /**
@@ -103,8 +115,14 @@ class Dice{
      *
     */
     set(new_dice_values, new_rolls_remaining){
-        for(let i = 1; i < this.dice.length; i++){
-            this.dice_elements[i].src = this.photo_names[this.dice[i]]+".svg"
+
+        this.dice = new_dice_values
+        this.rolls_remaining = new_rolls_remaining
+
+        for(let i = 0; i < this.dice.length; i++){
+            if (this.dice[i] != -1) {
+                this.dice_elements[i].src = "img/" + this.photo_names[this.dice[i]]+".svg"
+            }
         }
         this.rolls_remaining_element.innerHTML = this.rolls_remaining
     }

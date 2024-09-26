@@ -53,6 +53,7 @@ class Dice_UI_Tests(unittest.TestCase):
         self.browser.get(self.url)
   
         for i in range(5):
+            print(i)
             die_element = self.browser.find_element(By.ID, f"die_{i}")
             die_element_image_name = die_element.get_attribute("src").split("/")[-1]
             self.assertTrue(self.image_names.index(die_element_image_name)==0) #0: blank.svg

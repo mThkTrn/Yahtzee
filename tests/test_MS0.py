@@ -9,8 +9,8 @@ class Basic_Web_Tests(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         #Runs once, before any tests are run
-        self.url='127.0.0.1:8000'
-        #self.url='http://127.0.0.1:8080'
+        #self.url='127.0.0.1:8000'
+        self.url='http://127.0.0.1:8080'
         self.login_info={
             "title": 'Yahtzee: Login',
             "username_element": "username_input",

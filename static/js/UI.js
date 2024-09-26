@@ -38,11 +38,12 @@ let score_elements = Array.from(document.getElementsByClassName("score"));
 //---------Event Handlers-------//
 function reserve_die_handler(event){
     console.log("Trying to reserve "+event.target.id);
+    dice.reserve(event.target)
 }
 
 function roll_dice_handler(){
     display_feedback("Rolling the dice...", "good");
-
+    dice.roll()
     console.log("Dice values:", dice.get_values());
     console.log("Sum of all dice:", dice.get_sum());
     console.log("Count of all dice faces:", dice.get_counts());
