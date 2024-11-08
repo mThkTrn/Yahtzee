@@ -9,6 +9,16 @@ class Dice{
         this.counts = [0, 0, 0, 0, 0, 0]
     }
 
+    resetGame(){
+        this.rolls_remaining = 3
+        this.dice = [0, 0, 0, 0, 0]
+        this.counts = [0, 0, 0, 0, 0]
+        for (let die of this.dice_elements){
+            die.classList.remove("reserved")
+        }
+        this.set([0, 0, 0, 0, 0], 3)
+    }
+
     getRandomInt(min, max) {
         return Math.floor(Math.random() * ((max+1)-min))+min;
       }
@@ -64,7 +74,7 @@ class Dice{
         for (let i = 0; i < this.dice.length; i++){
             console.log(this.dice_elements[i].classList)
             if (Array.from(this.dice_elements[i].classList).includes("reserved")){
-                this.dice[i] = -1
+                // this.dice[i] = -1
             }
             else{
                 this.dice[i] = this.getRandomInt(1, 6)
