@@ -1,3 +1,5 @@
+# Madhavendra Thakur
+
 import sqlite3
 import random
 import re
@@ -22,6 +24,41 @@ class User:
         cursor.execute(f"DROP TABLE IF EXISTS {self.table_name};")
         results=cursor.execute(schema)
         db_connection.close()
+
+    def validate(self, user_info, user_id = None):
+
+        try:      
+      
+            db_connection = sqlite3.connect(self.db_name)
+            cursor = db_connection.cursor()
+
+            if not re.search("^[a-zA-Z0-9_-]*$", user_info["username"]):
+                return False
+            
+            if "@" not in user_info["email"] or "." not in user_info["email"]:
+                return False
+            
+            if len(user_info["password"]) < 8:
+                return False
+            
+            if id:
+                if user_id > self.max_safe_id:
+                    return False
+            
+            if "id" in user_info.keys():
+                if user_info["id"] > self.max_safe_id:
+                    return False
+            
+            if any(cursor.execute(f"SELECT * FROM {self.table_name} WHERE username = '{user_info["username"]}' OR email = '{user_info["email"]}'").fetchall()):
+                return False
+            
+            return True
+
+        except sqlite3.Error as error:
+            return {"status":"error",
+                    "data":error}
+        finally:
+            db_connection.close()
     
     def exists(self, username=None, id=None):
         try:           
@@ -32,13 +69,13 @@ class User:
                 return {"status":"error",
                     "data":"No username or id given to search for user by."}
             elif not username and id:
-                results =  cursor.execute(f"SELECT id, username FROM {self.table_name} WHERE id = {id}")
+                results =  cursor.execute(f"SELECT id, username FROM {self.table_name} WHERE id={id}").fetchall()
             elif username and not id:
-                results =  cursor.execute(f"SELECT id, username FROM {self.table_name} WHERE username = '{username}'")
+                results =  cursor.execute(f"SELECT id, username FROM {self.table_name} WHERE username = '{username}'").fetchall()
             elif username and id:
-                results =  cursor.execute(f"SELECT id, username FROM {self.table_name} WHERE id = {id} AND username = '{username}'")
+                results =  cursor.execute(f"SELECT id, username FROM {self.table_name} WHERE id = {id} AND username = '{username}'").fetchall()
             
-            return {"status" : "success", "data" : any(results)}
+            return {"status" : "success", "data" : results}
         except sqlite3.Error as error:
             return {"status":"error",
                     "data":error}
@@ -56,22 +93,8 @@ class User:
                 results = cursor.execute(f"SELECT id from {self.table_name}")
                 unique = not any([i[0] == user_id for i in results.fetchall()])
 
-            if not re.search("^[a-zA-Z0-9_-]*$", user_info["username"]):
-                return {"status": "error", "data": "Username contains invalid characters. Username should only contain alphanumberic characters, '-' and '_'"}
-            
-            if not re.search("[@.]*", user_info["email"]):
-                return {"status": "error", "data": "Email must contain '@' and '.'"}
-            
-            if len(user_info["password"]) < 8:
-                return {"status": "error", "data": "Password must be at least 8 letter long"}
-            
-            if user_id > self.max_safe_id:
-                return {"status": "error", "data": f"Id must be at most {self.max_safe_id}"}
-
-            if any(cursor.execute(f"SELECT * FROM {self.table_name} WHERE username = '{user_info["username"]}' OR email = '{user_info["email"]}'").fetchall()):
-                return {"status": "error", "data": "Username or email is not unique"}
-
-            
+            if not self.validate(user_info, user_id):
+                return {"status" : "error", "data" : "The format of the input data is incorrect"}
             
             user_data = (user_id, user_info["email"], user_info["username"], user_info["password"])
             #are you sure you have all data in the correct format?
@@ -83,8 +106,11 @@ class User:
                     }
         
         except sqlite3.Error as error:
+            if type(error).__name__ == "IntegrityError":
+                return {"status":"error",
+                    "data":"It seems like the server had an error processing the data."}            
             return {"status":"error",
-                    "data":error}
+                    "data":(error)}
         
         finally:
             db_connection.close()
@@ -106,10 +132,8 @@ class User:
                     "data":"No username or id given to search for user by."}
             elif username and not id:
                 results = cursor.execute(f"SELECT * FROM {self.table_name} WHERE username = '{username}'")
-            elif not username and id:
-                results = cursor.execute(f"SELECT * FROM {self.table_name} WHERE id = 'id'")
-            elif username and id:
-                results = cursor.execute(f"SELECT * FROM {self.table_name} WHERE username = '{username}' AND id = 'id'")
+            elif id:
+                results = cursor.execute(f"SELECT * FROM {self.table_name} WHERE id = {id}")
             
             out = results.fetchone()
 
@@ -125,7 +149,7 @@ class User:
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
             
-            return cursor.execute(f"SELECT * FROM {self.table_name}").fetchall()
+            return {"status" : "success", "data" : [self.to_dict(k) for k in cursor.execute(f"SELECT * FROM {self.table_name}").fetchall()]}
 
         except sqlite3.Error as error:
             return {"status":"error",
@@ -139,18 +163,20 @@ class User:
 
             db_connection = sqlite3.connect(self.db_name)
 
-            if not self.exists(username = user_info["username"], id = user_info["id"])["data"]:
+            if not self.exists(id = user_info["id"])["data"]:
                 return {"status": "error", "data" : "User does not exist."}
+            
+            if not self.validate(user_info):
+                return {"status" : "error", "data" : "The format of the input data is incorrect"}
             
             cursor = db_connection.cursor()
             execstring = f"UPDATE {self.table_name} SET username = '{user_info["username"]}', email = '{user_info["email"]}', password = '{user_info["password"]}' WHERE id = {user_info["id"]}"
-            print(execstring, user_info)
             
-            out = cursor.execute(execstring)
-
-            print(out)
+            cursor.execute(execstring)
             
             db_connection.commit()
+
+            return {"status": "success", "data" : self.get(id = user_info["id"])["data"]}
 
         
         except sqlite3.Error as error:
@@ -162,15 +188,21 @@ class User:
     def remove(self, username):
         try: 
             db_connection = sqlite3.connect(self.db_name)
+
+            if not self.exists(username = username)["data"]:
+                return {"status": "error", "data" : "User does not exist."}
+        
             cursor = db_connection.cursor()
-            results = cursor.execute(f"DELETE FROM {self.table_name} WHERE username = '{username}'")
+            deleted_user = self.get(username=username)["data"]
+            cursor.execute(f"DELETE FROM {self.table_name} WHERE username = '{username}'")
             db_connection.commit()
+            return {"status": "success", "data": deleted_user}
         except sqlite3.Error as error:
             return {"status":"error",
                     "data":error}
         finally:
             db_connection.close()
-            return {"status": "success"}
+
     
     def to_dict(self, user_tuple):
         '''Utility function which converts the tuple returned from a SQLlite3 database
@@ -229,6 +261,8 @@ if __name__ == '__main__':
     print(Users.get(username = "justingohde"))
 
     print(Users.get(id = 11235813))
+
+    print(Users.exists("justingohde"))
 
 
     #Users.remove("justingohde")

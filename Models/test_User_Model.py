@@ -87,6 +87,7 @@ class User_Model_Tests(unittest.TestCase):
             self.assertEqual(all_users[0][1], self.users[0]["email"], f"{method}- Data of returned user should match data of added user")
             self.assertEqual(all_users[0][2], self.users[0]["username"], f"{method}- Data of returned user should match data of added user")    
             self.assertEqual(all_users[0][3], self.users[0]["password"], f"{method}- Data of returned user should match data of added user")
+            print("test_create_1_user passed!")
         except sqlite3.Error as error:
             print(error)
         finally:
@@ -120,7 +121,7 @@ class User_Model_Tests(unittest.TestCase):
             
             self.assertEqual(len(all_users), 4, "Creating a single user should result in a table with exactly 1 user")
             self.assertEqual(all_users, self.users_tuples, "Data of returned users should match data of added users")
-         
+            print("test_create_4_users passed!")
         except sqlite3.Error as error:
             print(error)
         finally:
@@ -160,6 +161,7 @@ class User_Model_Tests(unittest.TestCase):
             results = cursor.execute(query)
             all_users = results.fetchall()
             self.assertEqual(len(all_users), len(self.users), f"{method}-  {len(self.users)} users should be returned")
+            print("test_create_user_with_duplicate_username_or_email passed!")
        except sqlite3.Error as error:
             print(error)
        finally:
@@ -210,7 +212,7 @@ class User_Model_Tests(unittest.TestCase):
                 print(error)
             finally:
                 db_connection.close()
-
+       print("test_create_user_with_incorrect_data_format passed!")
 
     def test_exists_id(self):
        method = "users.exists"
@@ -223,6 +225,7 @@ class User_Model_Tests(unittest.TestCase):
        self.assertEqual(packet["status"], "success", f"{method} should return success")
        self.assertTrue("data" in packet, f"{method} should return a data packet object in the correct format")
        self.assertTrue(packet["data"], f"{method} should return True for a user that does exist")
+       print("test_exists_id passed!")
 
     def test_exists_username(self):
        method = "users.exists"
@@ -235,7 +238,8 @@ class User_Model_Tests(unittest.TestCase):
        self.assertEqual(packet["status"], "success", f"{method} should return success")
        self.assertTrue("data" in packet, f"{method} should return a data packet object in the correct format")
        self.assertTrue(packet["data"], f"{method} should return True for a user that does exist")
-  
+       print("test_exists_username passed!")
+       
     def test_exists_user_DNE(self):
        method = "users.exists"
        user_DNE = "apples"
@@ -244,6 +248,7 @@ class User_Model_Tests(unittest.TestCase):
        self.assertEqual(packet["status"], "success", f"{method} should return success")
        self.assertTrue("data" in packet, f"{method} should return a data packet object in the correct format")
        self.assertFalse(packet["data"], f"{method} should return False for a user that does not exist")
+       print("test_exists_user_DNE passed!")
 
     def test_get_user_exists_username(self):
        method = "users.get"
@@ -259,7 +264,8 @@ class User_Model_Tests(unittest.TestCase):
        self.assertEqual(returned_user["email"], self.users[0]["email"], f"{method}- returned email should match data of original info")
        self.assertEqual(returned_user["username"], self.users[0]["username"], f"{method}- returned username should match data of original infor")    
        self.assertEqual(returned_user["password"], self.users[0]["password"], f"{method}- returned password should match data of original info")
-       
+       print("test_get_user_exists_username passed!")
+      
     def test_get_user_exists_id(self):
        method = "users.get"
 
@@ -274,12 +280,14 @@ class User_Model_Tests(unittest.TestCase):
        self.assertEqual(returned_user["email"], self.users[0]["email"], f"{method}- returned email should match data of original info")
        self.assertEqual(returned_user["username"], self.users[0]["username"], f"{method}- returned username should match data of original infor")    
        self.assertEqual(returned_user["password"], self.users[0]["password"], f"{method}- returned password should match data of original info")
-       
+       print("test_get_user_exists_id passed!")
+      
     def test_get_user_DNE(self):
        method = "users.get"
        user_DNE = "oranges"
        results = self.UserModel.get(user_DNE) 
        ensure_data_packet_formatting(self, results, method, "error")
+       print("test_get_user_DNE passed!")
     
     def test_get_all_many_users(self):
        method = "users.get_all"
@@ -309,6 +317,7 @@ class User_Model_Tests(unittest.TestCase):
             all_users = results.fetchall()
            
             self.assertEqual(len(all_users), len(self.users), f"{method} a {len(self.users)} users should be returned")
+            print("test_get_all_many_users passed!")
        except sqlite3.Error as error:
             print(error)
        finally:
@@ -338,6 +347,8 @@ class User_Model_Tests(unittest.TestCase):
             self.assertEqual(all_users[0][1], returned_user["email"], f"{method}- Data of DB user should match data of added user")
             self.assertEqual(all_users[0][2], returned_user["username"], f"{method}- Data of DB user should match data of added user")    
             self.assertEqual(all_users[0][3], returned_user["password"], f"{method}- Data of DB user should match data of added user")
+            print("test_get_all_one user passed!")
+       
        except sqlite3.Error as error:
             print(error)
        finally:
@@ -356,6 +367,8 @@ class User_Model_Tests(unittest.TestCase):
             all_users = results.fetchall()
            
             self.assertEqual(len(all_users), 0, f"{method} a no users should be returned")
+            print("test_get_all_no_user passed!")
+      
        except sqlite3.Error as error:
             print(error)
        finally:
@@ -380,6 +393,8 @@ class User_Model_Tests(unittest.TestCase):
             "password":"123TriniT"
         }
         returned_user = self.UserModel.update(updated_user_info)
+
+        print(updated_user_info, returned_user)
         
         ensure_data_packet_formatting(self, returned_user, method, "success")
         #returned object matches update information
@@ -398,6 +413,8 @@ class User_Model_Tests(unittest.TestCase):
             self.assertEqual(all_users[0][1], updated_user_info["email"], f"{method}- Data of DB user should match data of added user")
             self.assertEqual(all_users[0][2], updated_user_info["username"], f"{method}- Data of DB user should match data of added user")    
             self.assertEqual(all_users[0][3], updated_user_info["password"], f"{method}- Data of DB user should match data of added user")
+            print("test_update_1_change passed!")
+        
         except sqlite3.Error as error:
             print(error)
         finally:
@@ -423,8 +440,6 @@ class User_Model_Tests(unittest.TestCase):
         }
         returned_user = self.UserModel.update(updated_user_info)
         
-        print(returned_user)
-
         ensure_data_packet_formatting(self, returned_user, method, "success")
         #returned object matches update information
         self.assertEqual(returned_user["data"]["email"], updated_user_info["email"], f"{method}- returned email should match data of updated info")
@@ -442,6 +457,8 @@ class User_Model_Tests(unittest.TestCase):
             self.assertEqual(all_users[0][1], updated_user_info["email"], f"{method}- Data of DB user should match data of added user")
             self.assertEqual(all_users[0][2], updated_user_info["username"], f"{method}- Data of DB user should match data of added user")    
             self.assertEqual(all_users[0][3], updated_user_info["password"], f"{method}- Data of DB user should match data of added user")
+            print("test_update_many_changes passed!")
+        
         except sqlite3.Error as error:
             print(error)
         finally:
@@ -458,7 +475,135 @@ class User_Model_Tests(unittest.TestCase):
 
         results = self.UserModel.update(new_user) # DB is empty
         ensure_data_packet_formatting(self, results, method, "error")
+        print("test_update_user_DNE passed!")
+    
+    def test_update_username_email_already_exists(self):
+        method = "users.update"
+        
+        results = []
+        for i in range(len(self.users)):#add 4 users to the DB
+            results.append(self.UserModel.create(self.users[i])["data"]["username"])
+        
+        '''{"email":"zelda@trinityschoolnyc.org",
+            "username":"princessZ",
+            "password":"123TriniT"}'''
+        original_user_info = self.UserModel.get(username=self.users[2]["username"])
+        
+        updated_user_info = {
+            "id":original_user_info["data"]["id"],
+            "email":"zelda@trinityschoolnyc.org", 
+            "username":self.users[0]["username"], #only change- username already exists
+            "password":"123TriniT"
+        }
+        returned_user = self.UserModel.update(updated_user_info)
+        ensure_data_packet_formatting(self, returned_user, method, "error")
 
+        try:  #check DB state
+            db_connection = sqlite3.connect(self.yahtzee_db_name)
+            cursor = db_connection.cursor()
+            query = f"SELECT * from {self.table_name} WHERE id = {original_user_info['data']['id']};"
+            results = cursor.execute(query)
+            all_users = results.fetchall()
+           
+            self.assertEqual(len(all_users), 1, f"{method} a single user should be returned")
+            self.assertEqual(all_users[0][1], original_user_info["data"]["email"], f"{method}- Data of DB user should match data of added user")
+            self.assertEqual(all_users[0][2], original_user_info["data"]["username"], f"{method}- Data of DB user should match data of added user")    
+            self.assertEqual(all_users[0][3], original_user_info["data"]["password"], f"{method}- Data of DB user should match data of added user")
+        
+        except sqlite3.Error as error:
+            print(error)
+        finally:
+            db_connection.close()
+        
+        updated_user_info = {
+            "id":original_user_info["data"]["id"],
+            "email":self.users[0]["email"], #only change- username already exists
+            "username":"princessZ",
+            "password":"123TriniT"
+        }
+        returned_user = self.UserModel.update(updated_user_info)
+        ensure_data_packet_formatting(self, returned_user, method, "error")
+        try:  #check DB state
+            db_connection = sqlite3.connect(self.yahtzee_db_name)
+            cursor = db_connection.cursor()
+            query = f"SELECT * from {self.table_name} WHERE id = {original_user_info['data']['id']};"
+            results = cursor.execute(query)
+            all_users = results.fetchall()
+           
+            self.assertEqual(len(all_users), 1, f"{method} a single user should be returned")
+            self.assertEqual(all_users[0][1], original_user_info["data"]["email"], f"{method}- Data of DB user should match data of added user")
+            self.assertEqual(all_users[0][2], original_user_info["data"]["username"], f"{method}- Data of DB user should match data of added user")    
+            self.assertEqual(all_users[0][3], original_user_info["data"]["password"], f"{method}- Data of DB user should match data of added user")
+            print("test_update_username_email_already_exists passed!")
+        
+        except sqlite3.Error as error:
+            print(error)
+        finally:
+            db_connection.close()
+    
+    def test_update_user_with_incorrect_data_format(self):
+       method = "users.update"
+       results = []
+       for i in range(len(self.users)):#add 5 users to the DB
+            results.append(self.UserModel.create(self.users[i])["data"]["username"])
+        
+       '''{"email":"zelda@trinityschoolnyc.org",
+            "username":"princessZ",
+            "password":"123TriniT"}'''
+       original_user_info = self.UserModel.get(username=self.users[2]["username"])
+    
+       bad_user_data = [{"id":original_user_info["data"]["id"],
+                        "email": "hi.com", 
+                        "username":original_user_info["data"]["username"],
+                        "password":original_user_info["data"]["password"]}, # bad email
+                        {"id":original_user_info["data"]["id"],
+                         "email": "hi@com", 
+                        "username":original_user_info["data"]["username"],
+                        "password":original_user_info["data"]["password"]},# bad email
+                        {"id":original_user_info["data"]["id"],
+                         "email": "hey_hey", 
+                        "username":original_user_info["data"]["username"],
+                        "password":original_user_info["data"]["password"]},# bad email
+                        {"id":original_user_info["data"]["id"],
+                         "email": "hey hey", 
+                        "username":original_user_info["data"]["username"],
+                        "password":original_user_info["data"]["password"]}, # bad email
+                        {"id":original_user_info["data"]["id"],
+                         "email": original_user_info["data"]["email"], 
+                        "username":original_user_info["data"]["username"],
+                        "password":"123"}, # password too short
+                        {"id":original_user_info["data"]["id"],
+                         "email": original_user_info["data"]["email"], 
+                        "username":"something different",  # bad username
+                        "password":original_user_info["data"]["password"]},
+                        {"id":original_user_info["data"]["id"],
+                         "email": original_user_info["data"]["email"], 
+                        "username":"something@different",  # bad username
+                        "password":original_user_info["data"]["password"]},
+                        {"id":original_user_info["data"]["id"],
+                         "email": original_user_info["data"]["email"], 
+                        "username":"!something@different<>",  # bad username
+                        "password":original_user_info["data"]["password"]}
+                        ]
+       for bad_user in bad_user_data:
+            returned_user = self.UserModel.update(bad_user)
+       
+            ensure_data_packet_formatting(self, returned_user, method, "error")
+            try:  #check DB state
+                db_connection = sqlite3.connect(self.yahtzee_db_name)
+                cursor = db_connection.cursor()
+                query = f"SELECT * from {self.table_name} where id = {original_user_info['data']['id']};"
+                results = cursor.execute(query)
+                all_users = results.fetchall()
+                self.assertEqual(all_users[0][1], original_user_info["data"]["email"], f"{method}- Data of DB user should match data of added user")
+                self.assertEqual(all_users[0][2], original_user_info["data"]["username"], f"{method}- Data of DB user should match data of added user")    
+                self.assertEqual(all_users[0][3], original_user_info["data"]["password"], f"{method}- Data of DB user should match data of added user")        
+            except sqlite3.Error as error:
+                print(error)
+            finally:
+                db_connection.close()
+       print("test_create_user_with_incorrect_data_format passed!")
+       
     def test_delete_user_exists(self):
         method = "users.remove"
         #add 4 users to the DB
@@ -488,13 +633,14 @@ class User_Model_Tests(unittest.TestCase):
                 print(error)
             finally:
                 db_connection.close()
-
+        print("test_delete_user_exists passed!")
+    
     def test_delete_user_DNE(self):
         method = "users.remove"
         user_DNE = "bananas"
         results = self.UserModel.remove(user_DNE) 
         ensure_data_packet_formatting(self, results, method, "error")
+        print("test_delete_user_DNE passed!")
    
-
 if __name__ == '__main__':
     unittest.main() 
