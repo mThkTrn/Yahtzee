@@ -130,7 +130,7 @@ class Game:
                 return False
         
         if "id" in game_info.keys():
-            if game_info["id"] > self.max_safe_id:
+            if int(game_info["id"]) > self.max_safe_id:
                 return False
 
         if any(cursor.execute(f"SELECT * FROM {self.table_name} WHERE name = '{game_info["name"]}'").fetchall()):
@@ -215,6 +215,14 @@ if __name__ == '__main__':
     DB_location=f"{os.getcwd()}/Models/yahtzeeDB.db"
     table_name = "games"
 
-    game = Game()
+    game = Game(DB_location, table_name=table_name)
+
+    changedict = {
+        "id" : "2043559955519935",
+        "name" : "ourGame1",
+        "created" : "2024-11-20 17:59:37",
+        "finished" : "hahahah",
+    }
+    game.update(changedict)
 
     
