@@ -49,7 +49,7 @@ class User:
                 if user_info["id"] > self.max_safe_id:
                     return False
             
-            if any(cursor.execute(f"SELECT * FROM {self.table_name} WHERE username = '{user_info["username"]}' OR email = '{user_info["email"]}'").fetchall()):
+            if any(cursor.execute(f"SELECT * FROM {self.table_name} WHERE username = '{user_info['username']}' OR email = '{user_info['email']}'").fetchall()):
                 return False
             
             return True
@@ -170,7 +170,7 @@ class User:
                 return {"status" : "error", "data" : "The format of the input data is incorrect"}
             
             cursor = db_connection.cursor()
-            execstring = f"UPDATE {self.table_name} SET username = '{user_info["username"]}', email = '{user_info["email"]}', password = '{user_info["password"]}' WHERE id = {user_info["id"]}"
+            execstring = f"UPDATE {self.table_name} SET username = '{user_info['username']}', email = '{user_info['email']}', password = '{user_info['password']}' WHERE id = {user_info['id']}"
             
             cursor.execute(execstring)
             
