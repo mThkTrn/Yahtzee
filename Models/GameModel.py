@@ -73,6 +73,8 @@ class Game:
             return {"status": "success",
                     "data": self.get(game_name=game_info["name"])["data"]
                     }
+
+
         
         except sqlite3.Error as error:
             return {"status":"error",
