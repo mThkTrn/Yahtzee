@@ -54,8 +54,9 @@ class Scorecard:
         db_connection.close()
     
     def create(self, game_id, user_id, name):
+        db_connection = sqlite3.connect(self.db_name)
         try: 
-            db_connection = sqlite3.connect(self.db_name)
+            
             cursor = db_connection.cursor()
             card_id = random.randint(0, self.max_safe_id)
 
@@ -209,8 +210,32 @@ if __name__ == '__main__':
     DB_location=f"{os.getcwd()}/yahtzeeDB.db"
     #print("location", DB_location)
     Users = User(DB_location, "users")
+
     Users.initialize_table()
     Games = Game(DB_location, "games")
     Games.initialize_table()
     Scorecards = Scorecard(DB_location, "scorecards", "users", "games")
     Scorecards.initialize_table()
+
+    statedict = '''{
+            "dice_rolls":3,
+            "upper":{
+                "ones":-1,
+                "twos":-1,
+                "threes":-1,
+                "fours":-1,
+                "fives":-1,
+                "sixes":-1
+            },
+            "lower":{
+             "three_of_a_kind":-1,
+                "four_of_a_kind":-1,
+                "full_house":-1,
+                "small_straight":-1,
+                "large_straight":-1,
+                "yahtzee":-1,
+                "chance":-1
+            }
+        }'''
+    
+    Scorecard.create(1, 1, "bob", statedict)
