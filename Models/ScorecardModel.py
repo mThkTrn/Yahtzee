@@ -91,6 +91,7 @@ class Scorecard:
             
             cursor.execute(query)
             results = cursor.fetchone()
+            out = self.to_dict(results)
 
             return {"status" : "success", "data" : self.to_dict(out)}
 
@@ -105,6 +106,8 @@ class Scorecard:
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
 
+            return {"status" : "success", "data" : [self.to_dict(k) for k in cursor.execute(f"SELECT * FROM {self.table_name}").fetchall()]}
+
         except sqlite3.Error as error:
             return {"status":"error",
                     "data":error}
@@ -115,6 +118,8 @@ class Scorecard:
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
+            query = f'''SELECT * FROM
+                    {self.table_name} scorecard JOIN {self.game_table_name} game ON scorecard.game_id = game.id'''
 
         except sqlite3.Error as error:
             return {"status":"error",
