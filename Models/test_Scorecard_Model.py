@@ -148,9 +148,9 @@ class Scorecard_Model_Tests(unittest.TestCase):
             query = f"SELECT * from {self.scorecard_table_name};"
             results = cursor.execute(query)
             scorecards = results.fetchall()
-            print("Scorecards:")
-            print(scorecards)
-            print("___")
+            # print("Scorecards:")
+            # print(scorecards)
+            # print("___")
             self.assertTrue(len(scorecards)==1)
             self.assertEqual(scorecards[0][0], new_scorecard["data"]["id"])
             self.assertEqual(scorecards[0][1], game["id"])
@@ -274,459 +274,460 @@ class Scorecard_Model_Tests(unittest.TestCase):
         self.assertTrue(len(all_scorecards_returned)==1) #scorecard has not been added to DB
         print("test_create_too_many_scorecards_same_game_same_user passed!")  
     
-    # def test_get_scorecard_exists_id(self):
-    #     method = "scorecard.get"
-    #     all_scorecards = []
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]
-    #         game = list(self.games.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #         all_scorecards.append(new_scorecard["data"]) 
+    def test_get_scorecard_exists_id(self):
+        method = "scorecard.get"
+        all_scorecards = []
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]
+            game = list(self.games.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+            all_scorecards.append(new_scorecard["data"]) 
 
-    #     for card in all_scorecards:
-    #         returned_scorecard = self.ScorecardModel.get(id=card["id"])
-    #         ensure_data_packet_formatting(self, returned_scorecard, method, "success")
-    #         self.assertEqual(returned_scorecard["data"]["id"], card["id"])
-    #         self.assertEqual(returned_scorecard["data"]["user_id"], card["user_id"])
-    #         self.assertEqual(returned_scorecard["data"]["game_id"], card["game_id"])
-    #         self.assertEqual(returned_scorecard["data"]["categories"], card["categories"])
-    #         self.assertEqual(returned_scorecard["data"]["turn_order"], card["turn_order"])
-    #     print("test_get_scorecard_exists_id passed!") 
+        for card in all_scorecards:
+            returned_scorecard = self.ScorecardModel.get(id=card["id"])
+            ensure_data_packet_formatting(self, returned_scorecard, method, "success")
+            self.assertEqual(returned_scorecard["data"]["id"], card["id"])
+            self.assertEqual(returned_scorecard["data"]["user_id"], card["user_id"])
+            self.assertEqual(returned_scorecard["data"]["game_id"], card["game_id"])
+            self.assertEqual(returned_scorecard["data"]["categories"], card["categories"])
+            self.assertEqual(returned_scorecard["data"]["turn_order"], card["turn_order"])
+        print("test_get_scorecard_exists_id passed!") 
     
-    # def test_get_scorecard_exists_name(self):
-    #     method = "scorecard.get"
-    #     all_scorecards = []
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]
-    #         game = list(self.games.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #         all_scorecards.append(new_scorecard["data"]) 
+    def test_get_scorecard_exists_name(self):
+        method = "scorecard.get"
+        all_scorecards = []
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]
+            game = list(self.games.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+            all_scorecards.append(new_scorecard["data"]) 
         
-    #     for card in all_scorecards:
-    #         returned_scorecard = self.ScorecardModel.get(name=card["name"])
-    #         ensure_data_packet_formatting(self, returned_scorecard, method, "success")
-    #         self.assertEqual(returned_scorecard["data"]["id"], card["id"])
-    #         self.assertEqual(returned_scorecard["data"]["user_id"], card["user_id"])
-    #         self.assertEqual(returned_scorecard["data"]["game_id"], card["game_id"])
-    #         self.assertEqual(returned_scorecard["data"]["categories"], card["categories"])
-    #         self.assertEqual(returned_scorecard["data"]["turn_order"], card["turn_order"])
-    #     print("test_get_scorecard_exists_name passed!") 
+        for card in all_scorecards:
+            returned_scorecard = self.ScorecardModel.get(name=card["name"])
+            ensure_data_packet_formatting(self, returned_scorecard, method, "success")
+            self.assertEqual(returned_scorecard["data"]["id"], card["id"])
+            self.assertEqual(returned_scorecard["data"]["user_id"], card["user_id"])
+            self.assertEqual(returned_scorecard["data"]["game_id"], card["game_id"])
+            self.assertEqual(returned_scorecard["data"]["categories"], card["categories"])
+            self.assertEqual(returned_scorecard["data"]["turn_order"], card["turn_order"])
+        print("test_get_scorecard_exists_name passed!") 
     
-    # def test_get_scorecard_DNE(self):
-    #     method = "scorecard.get"
-    #     returned_scorecard = self.ScorecardModel.get(name="hello|Tigers")
-    #     ensure_data_packet_formatting(self, returned_scorecard, method, "error")
-    #     returned_scorecard = self.ScorecardModel.get(id=1234567)
-    #     ensure_data_packet_formatting(self, returned_scorecard, method, "error")
-    #     print("test_get_scorecard_DNE passed!") 
+    def test_get_scorecard_DNE(self):
+        method = "scorecard.get"
+        returned_scorecard = self.ScorecardModel.get(name="hello|Tigers")
+        ensure_data_packet_formatting(self, returned_scorecard, method, "error")
+        returned_scorecard = self.ScorecardModel.get(id=1234567)
+        ensure_data_packet_formatting(self, returned_scorecard, method, "error")
+        print("test_get_scorecard_DNE passed!") 
     
-    # def test_get_all_no_scorecards(self):
-    #     method = "scorecard.get_all"
-    #     returned_scorecards = self.ScorecardModel.get_all()
-    #     ensure_data_packet_formatting(self, returned_scorecards, method, "success")
-    #     self.assertEqual(len(returned_scorecards["data"]), 0)
+    def test_get_all_no_scorecards(self):
+        method = "scorecard.get_all"
+        returned_scorecards = self.ScorecardModel.get_all()
+        ensure_data_packet_formatting(self, returned_scorecards, method, "success")
+        self.assertEqual(len(returned_scorecards["data"]), 0)
 
-    #     print("test_get_all_no_scorecards passed!") 
+        print("test_get_all_no_scorecards passed!") 
     
-    # def test_get_all_1_scorecard(self):
-    #     method = "scorecard.get_all"
-    #     user = list(self.users.values())[0]
-    #     game = list(self.games.values())[0]
-    #     new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])["data"]
+    def test_get_all_1_scorecard(self):
+        method = "scorecard.get_all"
+        user = list(self.users.values())[0]
+        game = list(self.games.values())[0]
+        new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])["data"]
         
-    #     returned_scorecards = self.ScorecardModel.get_all()
-    #     ensure_data_packet_formatting(self, returned_scorecards, method, "success")
-    #     self.assertEqual(len(returned_scorecards["data"]), 1)
-    #     self.assertEqual(returned_scorecards["data"][0]["id"], new_scorecard["id"])
-    #     self.assertEqual(returned_scorecards["data"][0]["user_id"], new_scorecard["user_id"])
-    #     self.assertEqual(returned_scorecards["data"][0]["game_id"], new_scorecard["game_id"])
-    #     self.assertEqual(returned_scorecards["data"][0]["categories"], new_scorecard["categories"])
-    #     self.assertEqual(returned_scorecards["data"][0]["turn_order"], new_scorecard["turn_order"])
-    #     print("test_get_all_1_scorecard passed!") 
+        returned_scorecards = self.ScorecardModel.get_all()
+        ensure_data_packet_formatting(self, returned_scorecards, method, "success")
+        self.assertEqual(len(returned_scorecards["data"]), 1)
+        self.assertEqual(returned_scorecards["data"][0]["id"], new_scorecard["id"])
+        self.assertEqual(returned_scorecards["data"][0]["user_id"], new_scorecard["user_id"])
+        self.assertEqual(returned_scorecards["data"][0]["game_id"], new_scorecard["game_id"])
+        self.assertEqual(returned_scorecards["data"][0]["categories"], new_scorecard["categories"])
+        self.assertEqual(returned_scorecards["data"][0]["turn_order"], new_scorecard["turn_order"])
+        print("test_get_all_1_scorecard passed!") 
         
-    # def test_get_all_many_scorecards(self):
-    #     method = "scorecard.get_all"
-    #     all_scorecards=[]
-    #     game = list(self.games.values())[0]
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #         all_scorecards.append(new_scorecard["data"])  
-    #     all_scorecards.sort(key=lambda card: card["id"])
+    def test_get_all_many_scorecards(self):
+        method = "scorecard.get_all"
+        all_scorecards=[]
+        game = list(self.games.values())[0]
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+            all_scorecards.append(new_scorecard["data"])  
+        all_scorecards.sort(key=lambda card: card["id"])
 
-    #     returned_scorecards = self.ScorecardModel.get_all()
-    #     ensure_data_packet_formatting(self, returned_scorecards, method, "success")
-    #     self.assertEqual(len(returned_scorecards["data"]), len(all_scorecards))
+        returned_scorecards = self.ScorecardModel.get_all()
+        ensure_data_packet_formatting(self, returned_scorecards, method, "success")
+        self.assertEqual(len(returned_scorecards["data"]), len(all_scorecards))
         
-    #     returned_scorecards["data"].sort(key=lambda card: card["id"])
-    #     for i in range(len(returned_scorecards["data"])):
-    #         self.assertEqual(returned_scorecards["data"][i]["id"], all_scorecards[i]["id"])
-    #         self.assertEqual(returned_scorecards["data"][i]["user_id"], all_scorecards[i]["user_id"])
-    #         self.assertEqual(returned_scorecards["data"][i]["game_id"], all_scorecards[i]["game_id"])
-    #         self.assertEqual(returned_scorecards["data"][i]["categories"], all_scorecards[i]["categories"])
-    #         self.assertEqual(returned_scorecards["data"][i]["turn_order"], all_scorecards[i]["turn_order"])
-    #     print("test_get_all_many_scorecards passed!")  
+        returned_scorecards["data"].sort(key=lambda card: card["id"])
+        for i in range(len(returned_scorecards["data"])):
+            self.assertEqual(returned_scorecards["data"][i]["id"], all_scorecards[i]["id"])
+            self.assertEqual(returned_scorecards["data"][i]["user_id"], all_scorecards[i]["user_id"])
+            self.assertEqual(returned_scorecards["data"][i]["game_id"], all_scorecards[i]["game_id"])
+            self.assertEqual(returned_scorecards["data"][i]["categories"], all_scorecards[i]["categories"])
+            self.assertEqual(returned_scorecards["data"][i]["turn_order"], all_scorecards[i]["turn_order"])
+        print("test_get_all_many_scorecards passed!")  
 
-    # def test_get_all_game_scorecards_no_scorecards(self):
-    #     method = "scorecard._game_scorecards"
-    #     #no games
-    #     all_game_scorecards = self.ScorecardModel.get_all_game_scorecards(game_name='fake_game_DNE')
-    #     ensure_data_packet_formatting(self, all_game_scorecards, method, "success")
-    #     self.assertEqual(len(all_game_scorecards["data"]), 0)
-    #     #4 games
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]
-    #         game = list(self.games.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #     all_game_usernames = self.ScorecardModel.get_all_game_scorecards(game_name='fake_game_DNE')
-    #     ensure_data_packet_formatting(self, all_game_usernames, method, "success")
-    #     self.assertEqual(len(all_game_usernames["data"]), 0)
-    #     print("test_get_all_game_scorecards_no_scorecards passed!") 
+    def test_get_all_game_scorecards_no_scorecards(self):
+        method = "scorecard._game_scorecards"
+        #no games
+        all_game_scorecards = self.ScorecardModel.get_all_game_scorecards(game_name='fake_game_DNE')
+        ensure_data_packet_formatting(self, all_game_scorecards, method, "success")
+        self.assertEqual(len(all_game_scorecards["data"]), 0)
+        #4 games
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]
+            game = list(self.games.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+        all_game_usernames = self.ScorecardModel.get_all_game_scorecards(game_name='fake_game_DNE')
+        print(all_game_usernames)
+        ensure_data_packet_formatting(self, all_game_usernames, method, "success")
+        self.assertEqual(len(all_game_usernames["data"]), 0)
+        print("test_get_all_game_scorecards_no_scorecards passed!") 
            
-    # def test_get_all_game_scorecards_1_scorecard(self):
-    #     method = "scorecard._game_scorecards"
-    #     all_scorecards = {}
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]
-    #         game = list(self.games.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #         all_scorecards[game["name"]] = new_scorecard["data"]
+    def test_get_all_game_scorecards_1_scorecard(self):
+        method = "scorecard._game_scorecards"
+        all_scorecards = {}
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]
+            game = list(self.games.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+            all_scorecards[game["name"]] = new_scorecard["data"]
         
-    #     game_name_to_get = list(self.games.values())[0]["name"]
-    #     all_game_scorecards = self.ScorecardModel.get_all_game_scorecards(game_name=game_name_to_get)
-    #     ensure_data_packet_formatting(self, all_game_scorecards, method, "success")
-    #     self.assertEqual(len(all_game_scorecards["data"]), 1)
-    #     self.assertEqual(all_game_scorecards["data"][0]["id"], all_scorecards[game_name_to_get]["id"])
-    #     self.assertEqual(all_game_scorecards["data"][0]["user_id"], all_scorecards[game_name_to_get]["user_id"])
-    #     self.assertEqual(all_game_scorecards["data"][0]["game_id"], all_scorecards[game_name_to_get]["game_id"])
-    #     self.assertEqual(all_game_scorecards["data"][0]["categories"], all_scorecards[game_name_to_get]["categories"])
-    #     self.assertEqual(all_game_scorecards["data"][0]["turn_order"], all_scorecards[game_name_to_get]["turn_order"])
-    #     print("test_get_all_game_scorecards_1_scorecard passed!") 
+        game_name_to_get = list(self.games.values())[0]["name"]
+        all_game_scorecards = self.ScorecardModel.get_all_game_scorecards(game_name=game_name_to_get)
+        ensure_data_packet_formatting(self, all_game_scorecards, method, "success")
+        self.assertEqual(len(all_game_scorecards["data"]), 1)
+        self.assertEqual(all_game_scorecards["data"][0]["id"], all_scorecards[game_name_to_get]["id"])
+        self.assertEqual(all_game_scorecards["data"][0]["user_id"], all_scorecards[game_name_to_get]["user_id"])
+        self.assertEqual(all_game_scorecards["data"][0]["game_id"], all_scorecards[game_name_to_get]["game_id"])
+        self.assertEqual(all_game_scorecards["data"][0]["categories"], all_scorecards[game_name_to_get]["categories"])
+        self.assertEqual(all_game_scorecards["data"][0]["turn_order"], all_scorecards[game_name_to_get]["turn_order"])
+        print("test_get_all_game_scorecards_1_scorecard passed!") 
         
-    # def test_get_all_game_scorecards_many_scorecards(self):
-    #     method = "scorecard.get_all_game_scorecards"
-    #     #add 4 scorecards to the same game
-    #     all_scorecards=[]
-    #     game = list(self.games.values())[2]
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #         all_scorecards.append(new_scorecard["data"])
-    #     all_scorecards.sort(key=lambda card: card["id"])
+    def test_get_all_game_scorecards_many_scorecards(self):
+        method = "scorecard.get_all_game_scorecards"
+        #add 4 scorecards to the same game
+        all_scorecards=[]
+        game = list(self.games.values())[2]
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+            all_scorecards.append(new_scorecard["data"])
+        all_scorecards.sort(key=lambda card: card["id"])
 
-    #     #create a game/scorecard for a game with a name that is a substring of the above name
-    #     sneaky_game_info={"name":game["name"][:-3]}
-    #     returned_sneaky_game = self.GameModel.create(sneaky_game_info)
-    #     sneaky_game_id = returned_sneaky_game["data"]["id"]
-    #     sneaky_game_user_id = list(self.users.values())[1]["id"]
-    #     sneaky_game_name = sneaky_game_info["name"]+"|"+list(self.users.values())[1]["username"]
-    #     self.ScorecardModel.create(sneaky_game_id, sneaky_game_user_id, sneaky_game_name)
+        #create a game/scorecard for a game with a name that is a substring of the above name
+        sneaky_game_info={"name":game["name"][:-3]}
+        returned_sneaky_game = self.GameModel.create(sneaky_game_info)
+        sneaky_game_id = returned_sneaky_game["data"]["id"]
+        sneaky_game_user_id = list(self.users.values())[1]["id"]
+        sneaky_game_name = sneaky_game_info["name"]+"|"+list(self.users.values())[1]["username"]
+        self.ScorecardModel.create(sneaky_game_id, sneaky_game_user_id, sneaky_game_name)
 
-    #     all_game_scorecards = self.ScorecardModel.get_all_game_scorecards(game_name=game['name'])
-    #     ensure_data_packet_formatting(self, all_game_scorecards, method, "success")
-    #     self.assertEqual(len(all_scorecards), len(all_game_scorecards["data"])) #sneaky game should not be included
-    #     all_game_scorecards["data"].sort(key=lambda card: card["id"])
-    #     for i in range(len(all_game_scorecards["data"])):
-    #         self.assertEqual(all_game_scorecards["data"][i]["id"], all_scorecards[i]["id"])
-    #         self.assertEqual(all_game_scorecards["data"][i]["user_id"], all_scorecards[i]["user_id"])
-    #         self.assertEqual(all_game_scorecards["data"][i]["game_id"], all_scorecards[i]["game_id"])
-    #         self.assertEqual(all_game_scorecards["data"][i]["categories"], all_scorecards[i]["categories"])
-    #         self.assertEqual(all_game_scorecards["data"][i]["turn_order"], all_scorecards[i]["turn_order"])
+        all_game_scorecards = self.ScorecardModel.get_all_game_scorecards(game_name=game['name'])
+        ensure_data_packet_formatting(self, all_game_scorecards, method, "success")
+        self.assertEqual(len(all_scorecards), len(all_game_scorecards["data"])) #sneaky game should not be included
+        all_game_scorecards["data"].sort(key=lambda card: card["id"])
+        for i in range(len(all_game_scorecards["data"])):
+            self.assertEqual(all_game_scorecards["data"][i]["id"], all_scorecards[i]["id"])
+            self.assertEqual(all_game_scorecards["data"][i]["user_id"], all_scorecards[i]["user_id"])
+            self.assertEqual(all_game_scorecards["data"][i]["game_id"], all_scorecards[i]["game_id"])
+            self.assertEqual(all_game_scorecards["data"][i]["categories"], all_scorecards[i]["categories"])
+            self.assertEqual(all_game_scorecards["data"][i]["turn_order"], all_scorecards[i]["turn_order"])
 
-    #     print("test_get_all_game_scorecards_many_scorecards passed!") 
+        print("test_get_all_game_scorecards_many_scorecards passed!") 
         
-    # def test_get_all_game_usernames_no_scorecards(self):
-    #     method = "scorecard.get_all_game_usernames"
-    #     # no games
-    #     all_game_usernames = self.ScorecardModel.get_all_game_usernames(game_name='fake_game_DNE')
-    #     ensure_data_packet_formatting(self, all_game_usernames, method, "success")
-    #     self.assertEqual(len(all_game_usernames["data"]), 0)
-    #     # 4 games w/ no scorecards
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]
-    #         game = list(self.games.values())[i]
-    #         all_game_usernames = self.ScorecardModel.get_all_game_usernames(game_name=game['name'])
-    #         self.assertEqual(len(all_game_usernames["data"]), 0)
-    #     print("test_get_all_game_usernames_no_scorecards passed!")  
+    def test_get_all_game_usernames_no_scorecards(self):
+        method = "scorecard.get_all_game_usernames"
+        # no games
+        all_game_usernames = self.ScorecardModel.get_all_game_usernames(game_name='fake_game_DNE')
+        ensure_data_packet_formatting(self, all_game_usernames, method, "success")
+        self.assertEqual(len(all_game_usernames["data"]), 0)
+        # 4 games w/ no scorecards
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]
+            game = list(self.games.values())[i]
+            all_game_usernames = self.ScorecardModel.get_all_game_usernames(game_name=game['name'])
+            self.assertEqual(len(all_game_usernames["data"]), 0)
+        print("test_get_all_game_usernames_no_scorecards passed!")  
            
-    # def test_get_all_game_usernames_1_scorecard(self):
-    #     method = "scorecard.get_all_game_usernames"
-    #     user = list(self.users.values())[3]
-    #     game = list(self.games.values())[3]
-    #     new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+    def test_get_all_game_usernames_1_scorecard(self):
+        method = "scorecard.get_all_game_usernames"
+        user = list(self.users.values())[3]
+        game = list(self.games.values())[3]
+        new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
 
-    #     all_game_usernames = self.ScorecardModel.get_all_game_usernames(game_name=game['name'])
-    #     self.assertEqual(len(all_game_usernames["data"]), 1)
-    #     self.assertEqual(all_game_usernames["data"][0], user["username"])
-    #     print("test_get_all_game_usernames_1_scorecard passed!") 
+        all_game_usernames = self.ScorecardModel.get_all_game_usernames(game_name=game['name'])
+        self.assertEqual(len(all_game_usernames["data"]), 1)
+        self.assertEqual(all_game_usernames["data"][0], user["username"])
+        print("test_get_all_game_usernames_1_scorecard passed!") 
     
-    # def test_get_all_game_usernames_many_scorecards(self):
-    #     method = "scorecard.et_all_game_usernames"
-    #     game = list(self.games.values())[1]
-    #     all_users =[]
-    #     for i in range(len(self.users)-1): # creates a game w/ len(self.users)-1 scorecards
-    #         user = list(self.users.values())[i]
-    #         all_users.append(user["username"])
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+    def test_get_all_game_usernames_many_scorecards(self):
+        method = "scorecard.et_all_game_usernames"
+        game = list(self.games.values())[1]
+        all_users =[]
+        for i in range(len(self.users)-1): # creates a game w/ len(self.users)-1 scorecards
+            user = list(self.users.values())[i]
+            all_users.append(user["username"])
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
        
-    #     all_game_usernames = self.ScorecardModel.get_all_game_usernames(game_name=game['name'])
-    #     self.assertEqual(len(all_game_usernames["data"]), len(self.users)-1)
-    #     for username in all_users:
-    #         self.assertIn(username, all_game_usernames["data"])
+        all_game_usernames = self.ScorecardModel.get_all_game_usernames(game_name=game['name'])
+        self.assertEqual(len(all_game_usernames["data"]), len(self.users)-1)
+        for username in all_users:
+            self.assertIn(username, all_game_usernames["data"])
             
-    #     print("test_get_all_game_usernames_many_scorecards passed!") 
+        print("test_get_all_game_usernames_many_scorecards passed!") 
         
-    # def test_get_all_user_game_names_no_games(self):
-    #     method = "scorecard.get_all_user_game_names"
-    #     # no scorecards or games
-    #     all_user_games = self.ScorecardModel.get_all_user_game_names(username='fake_username_DNE')
-    #     self.assertEqual(len(all_user_games["data"]), 0)
+    def test_get_all_user_game_names_no_games(self):
+        method = "scorecard.get_all_user_game_names"
+        # no scorecards or games
+        all_user_games = self.ScorecardModel.get_all_user_game_names(username='fake_username_DNE')
+        self.assertEqual(len(all_user_games["data"]), 0)
 
-    #     for i in range(len(self.games)):
-    #         user = list(self.users.values())[0] 
-    #         game = list(self.games.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+        for i in range(len(self.games)):
+            user = list(self.users.values())[0] 
+            game = list(self.games.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
         
-    #     all_user_games = self.ScorecardModel.get_all_user_game_names(username=list(self.users.values())[1]['username'])
-    #     ensure_data_packet_formatting(self, all_user_games, method, "success")
-    #     self.assertEqual(len(all_user_games["data"]), 0)
+        all_user_games = self.ScorecardModel.get_all_user_game_names(username=list(self.users.values())[1]['username'])
+        ensure_data_packet_formatting(self, all_user_games, method, "success")
+        self.assertEqual(len(all_user_games["data"]), 0)
 
-    #     print("test_get_all_user_game_names_no_games passed!")  
+        print("test_get_all_user_game_names_no_games passed!")  
           
-    # def test_get_all_user_game_names_1_game(self):
-    #     method = "scorecard.get_all_user_game_names"
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]  
-    #         game = list(self.games.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+    def test_get_all_user_game_names_1_game(self):
+        method = "scorecard.get_all_user_game_names"
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]  
+            game = list(self.games.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
         
-    #     username_to_check = list(self.users.values())[1]['username']
-    #     game_name_to_check = list(self.games.values())[1]['name']
-    #     all_user_game_names = self.ScorecardModel.get_all_user_game_names(username=username_to_check)
-    #     self.assertEqual(len(all_user_game_names["data"]), 1)
-    #     self.assertIn(game_name_to_check, all_user_game_names['data'])
-    #     print("test_get_all_user_game_names_1_game passed!") 
+        username_to_check = list(self.users.values())[1]['username']
+        game_name_to_check = list(self.games.values())[1]['name']
+        all_user_game_names = self.ScorecardModel.get_all_user_game_names(username=username_to_check)
+        self.assertEqual(len(all_user_game_names["data"]), 1)
+        self.assertIn(game_name_to_check, all_user_game_names['data'])
+        print("test_get_all_user_game_names_1_game passed!") 
   
-    # def test_get_all_user_game_names_many_games(self):
-    #     method = "scorecard.get_all_user_game_names"
-    #     user = list(self.users.values())[2] #same user for len(self.games) games
-    #     all_game_names = []
-    #     for i in range(len(self.games)):
-    #         game = list(self.games.values())[i]
-    #         all_game_names.append(game["name"])
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+    def test_get_all_user_game_names_many_games(self):
+        method = "scorecard.get_all_user_game_names"
+        user = list(self.users.values())[2] #same user for len(self.games) games
+        all_game_names = []
+        for i in range(len(self.games)):
+            game = list(self.games.values())[i]
+            all_game_names.append(game["name"])
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
         
-    #     username_to_check = user['username']
-    #     all_user_game_names = self.ScorecardModel.get_all_user_game_names(username=username_to_check)
-    #     self.assertEqual(len(all_user_game_names["data"]), len(self.games))
-    #     for game_name_to_check in all_game_names:
-    #         self.assertIn(game_name_to_check, all_user_game_names['data'])
-    #     print("test_get_all_user_game_names_many_games passed!") 
+        username_to_check = user['username']
+        all_user_game_names = self.ScorecardModel.get_all_user_game_names(username=username_to_check)
+        self.assertEqual(len(all_user_game_names["data"]), len(self.games))
+        for game_name_to_check in all_game_names:
+            self.assertIn(game_name_to_check, all_user_game_names['data'])
+        print("test_get_all_user_game_names_many_games passed!") 
         
-    # def test_update_scorecard_exists(self):
-    #     #only tests updating categories since that will be the way we use update in pur project
-    #     method = "scorecard.update"
-    #     all_scorecards=[]
-    #     for i in range(len(self.users)): #4 games with 1 scorecard each
-    #         user = list(self.users.values())[i]
-    #         game = list(self.games.values())[i]
+    def test_update_scorecard_exists(self):
+        #only tests updating categories since that will be the way we use update in pur project
+        method = "scorecard.update"
+        all_scorecards=[]
+        for i in range(len(self.users)): #4 games with 1 scorecard each
+            user = list(self.users.values())[i]
+            game = list(self.games.values())[i]
  
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #         all_scorecards.append(new_scorecard["data"])
-    #     all_scorecards.sort(key=lambda scorecard: scorecard["id"])
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+            all_scorecards.append(new_scorecard["data"])
+        all_scorecards.sort(key=lambda scorecard: scorecard["id"])
         
-    #     returned_card = self.ScorecardModel.update(id=all_scorecards[0]["id"], name=all_scorecards[0]["name"], categories=self.partial_card)
+        returned_card = self.ScorecardModel.update(id=all_scorecards[0]["id"], name=all_scorecards[0]["name"], categories=self.partial_card)
         
-    #     ensure_data_packet_formatting(self, returned_card, method, "success")
-    #     self.assertEqual(returned_card['data']['id'],all_scorecards[0]['id'])
-    #     self.assertEqual(returned_card['data']['game_id'],all_scorecards[0]['game_id'])
-    #     self.assertEqual(returned_card['data']['user_id'],all_scorecards[0]['user_id'])
-    #     self.assertEqual(returned_card['data']['name'],all_scorecards[0]['name'])
-    #     self.assertEqual(returned_card['data']['turn_order'],all_scorecards[0]['turn_order'])
-    #     self.assertEqual(returned_card['data']['categories'],self.partial_card)
-    #     #check DB state
-    #     try: 
-    #         db_connection = sqlite3.connect(self.yahtzee_db_name)
-    #         cursor = db_connection.cursor()
-    #         query = f"SELECT * from {self.scorecard_table_name} WHERE id = {all_scorecards[0]['id']};"
-    #         results = cursor.execute(query)
-    #         result = results.fetchall()[0]
+        ensure_data_packet_formatting(self, returned_card, method, "success")
+        self.assertEqual(returned_card['data']['id'],all_scorecards[0]['id'])
+        self.assertEqual(returned_card['data']['game_id'],all_scorecards[0]['game_id'])
+        self.assertEqual(returned_card['data']['user_id'],all_scorecards[0]['user_id'])
+        self.assertEqual(returned_card['data']['name'],all_scorecards[0]['name'])
+        self.assertEqual(returned_card['data']['turn_order'],all_scorecards[0]['turn_order'])
+        self.assertEqual(returned_card['data']['categories'],self.partial_card)
+        #check DB state
+        try: 
+            db_connection = sqlite3.connect(self.yahtzee_db_name)
+            cursor = db_connection.cursor()
+            query = f"SELECT * from {self.scorecard_table_name} WHERE id = {all_scorecards[0]['id']};"
+            results = cursor.execute(query)
+            result = results.fetchall()[0]
 
-    #         self.assertEqual(result[0],all_scorecards[0]['id'])
-    #         self.assertEqual(result[1],all_scorecards[0]['game_id'])
-    #         self.assertEqual(result[2],all_scorecards[0]['user_id'])
-    #         self.assertEqual(result[3],json.dumps(self.partial_card))
-    #         self.assertEqual(result[4],all_scorecards[0]['turn_order'])
-    #         self.assertEqual(result[5],all_scorecards[0]['name'])
+            self.assertEqual(result[0],all_scorecards[0]['id'])
+            self.assertEqual(result[1],all_scorecards[0]['game_id'])
+            self.assertEqual(result[2],all_scorecards[0]['user_id'])
+            self.assertEqual(result[3],json.dumps(self.partial_card))
+            self.assertEqual(result[4],all_scorecards[0]['turn_order'])
+            self.assertEqual(result[5],all_scorecards[0]['name'])
             
-    #         print("test_update_scorecard_exists passed!")  
-    #     except sqlite3.Error as error:
-    #         print(error)
-    #     finally:
-    #         db_connection.close()
+            print("test_update_scorecard_exists passed!")  
+        except sqlite3.Error as error:
+            print(error)
+        finally:
+            db_connection.close()
     
-    # def test_update_scorecard_DNE(self):
-    #     method = "scorecard.update"
+    def test_update_scorecard_DNE(self):
+        method = "scorecard.update"
         
-    #     scorecard_name=self.games_info[0]['name']+'|'+self.users_info[0]['username']
+        scorecard_name=self.games_info[0]['name']+'|'+self.users_info[0]['username']
        
-    #     returned_scorecard=self.ScorecardModel.update(id=12345, name=scorecard_name,  categories=self.partial_card)
-    #     ensure_data_packet_formatting(self, returned_scorecard, method, "error")
-    #     returned_scorecards = self.ScorecardModel.get_all()
-    #     self.assertTrue(len(returned_scorecards['data'])==0)
-    #     print("test_update_scorecard_DNE passed!")
+        returned_scorecard=self.ScorecardModel.update(id=12345, name=scorecard_name,  categories=self.partial_card)
+        ensure_data_packet_formatting(self, returned_scorecard, method, "error")
+        returned_scorecards = self.ScorecardModel.get_all()
+        self.assertTrue(len(returned_scorecards['data'])==0)
+        print("test_update_scorecard_DNE passed!")
     
-    # def test_remove_scorecard_DNE(self):
-    #     method = "scorecard.remove"
-    #     #empty DB
-    #     removed_card = self.ScorecardModel.remove(id=1234567)
-    #     ensure_data_packet_formatting(self, removed_card, method, "error")
-    #     #DB w/ 1 element
-    #     user = list(self.users.values())[0]
-    #     game = list(self.games.values())[0]
-    #     new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #     removed_card = self.ScorecardModel.remove(id=new_scorecard['data']['id']+1)
-    #     ensure_data_packet_formatting(self, removed_card, method, "error")
-    #     print("test_remove_scorecard_DNE passed!")
+    def test_remove_scorecard_DNE(self):
+        method = "scorecard.remove"
+        #empty DB
+        removed_card = self.ScorecardModel.remove(id=1234567)
+        ensure_data_packet_formatting(self, removed_card, method, "error")
+        #DB w/ 1 element
+        user = list(self.users.values())[0]
+        game = list(self.games.values())[0]
+        new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+        removed_card = self.ScorecardModel.remove(id=new_scorecard['data']['id']+1)
+        ensure_data_packet_formatting(self, removed_card, method, "error")
+        print("test_remove_scorecard_DNE passed!")
 
-    # def test_remove_scorecard_exists(self):
-    #     method = "scorecard.remove"
-    #     all_scorecards = []
-    #     for i in range(len(self.users)):
-    #         user = list(self.users.values())[i]
-    #         game = list(self.games.values())[i]
-    #         new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #         all_scorecards.append(new_scorecard['data'])
-    #         if i%2 == 1: #some games have multiple scorecards
-    #           user = list(self.users.values())[i-1]
-    #           new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
-    #           all_scorecards.append(new_scorecard)
+    def test_remove_scorecard_exists(self):
+        method = "scorecard.remove"
+        all_scorecards = []
+        for i in range(len(self.users)):
+            user = list(self.users.values())[i]
+            game = list(self.games.values())[i]
+            new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+            all_scorecards.append(new_scorecard['data'])
+            if i%2 == 1: #some games have multiple scorecards
+              user = list(self.users.values())[i-1]
+              new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+              all_scorecards.append(new_scorecard)
 
-    #     scorecard_to_remove_0 = all_scorecards[0] # only scorecard for game 0
-    #     scorecard_to_remove_1 = all_scorecards[1] # one of two scorecards for game 1
-    #     removed_card_0 = self.ScorecardModel.remove(id=scorecard_to_remove_0['id'])
-    #     self.assertEqual(removed_card_0["data"]["id"], scorecard_to_remove_0["id"])
-    #     self.assertEqual(removed_card_0["data"]["user_id"], scorecard_to_remove_0["user_id"])
-    #     self.assertEqual(removed_card_0["data"]["game_id"], scorecard_to_remove_0["game_id"])
+        scorecard_to_remove_0 = all_scorecards[0] # only scorecard for game 0
+        scorecard_to_remove_1 = all_scorecards[1] # one of two scorecards for game 1
+        removed_card_0 = self.ScorecardModel.remove(id=scorecard_to_remove_0['id'])
+        self.assertEqual(removed_card_0["data"]["id"], scorecard_to_remove_0["id"])
+        self.assertEqual(removed_card_0["data"]["user_id"], scorecard_to_remove_0["user_id"])
+        self.assertEqual(removed_card_0["data"]["game_id"], scorecard_to_remove_0["game_id"])
         
-    #     removed_card_1 = self.ScorecardModel.remove(id=scorecard_to_remove_1['id'])
-    #     self.assertEqual(removed_card_1["data"]["id"], scorecard_to_remove_1["id"])
-    #     self.assertEqual(removed_card_1["data"]["user_id"], scorecard_to_remove_1["user_id"])
-    #     self.assertEqual(removed_card_1["data"]["game_id"], scorecard_to_remove_1["game_id"])
+        removed_card_1 = self.ScorecardModel.remove(id=scorecard_to_remove_1['id'])
+        self.assertEqual(removed_card_1["data"]["id"], scorecard_to_remove_1["id"])
+        self.assertEqual(removed_card_1["data"]["user_id"], scorecard_to_remove_1["user_id"])
+        self.assertEqual(removed_card_1["data"]["game_id"], scorecard_to_remove_1["game_id"])
         
-    #     try: 
-    #         db_connection = sqlite3.connect(self.yahtzee_db_name)
-    #         cursor = db_connection.cursor()
-    #         query = f"SELECT * from {self.scorecard_table_name};"
-    #         results = cursor.execute(query)
-    #         DB_cards = results.fetchall()
-    #         self.assertEqual(len(DB_cards), len(all_scorecards)-2)
-    #         for DB_card in DB_cards:#verify removed cards not in all scorecards
-    #             self.assertNotEqual(scorecard_to_remove_0['id'], DB_card[0])
-    #             self.assertNotEqual(scorecard_to_remove_1['id'], DB_card[0])
-    #         print("test_remove_scorecard_exists passed!")  
-    #     except sqlite3.Error as error:
-    #         print(error)
-    #     finally:
-    #         db_connection.close()
+        try: 
+            db_connection = sqlite3.connect(self.yahtzee_db_name)
+            cursor = db_connection.cursor()
+            query = f"SELECT * from {self.scorecard_table_name};"
+            results = cursor.execute(query)
+            DB_cards = results.fetchall()
+            self.assertEqual(len(DB_cards), len(all_scorecards)-2)
+            for DB_card in DB_cards:#verify removed cards not in all scorecards
+                self.assertNotEqual(scorecard_to_remove_0['id'], DB_card[0])
+                self.assertNotEqual(scorecard_to_remove_1['id'], DB_card[0])
+            print("test_remove_scorecard_exists passed!")  
+        except sqlite3.Error as error:
+            print(error)
+        finally:
+            db_connection.close()
         
-    # def test_tally_score_with_scores(self):
-    #     score_info_finished={
-    #         "rolls_remaining":0,
-    #         "upper":{
-    #             "one":4,
-    #             "two":8,
-    #             "three":12,
-    #             "four":16,
-    #             "five":20,
-    #             "six":24
-    #             },
-    #             "lower":{
-    #                 "three_of_a_kind":20,
-    #                 "four_of_a_kind":26,
-    #                 "full_house":25,
-    #                 "small_straight":0,
-    #                 "large_straight":40,
-    #                 "yahtzee":50,
-    #                 "chance":8
-    #             }
-    #         }
-    #     score_info_finished_no_bonus={
-    #         "rolls_remaining":0,
-    #         "upper":{
-    #             "one":4,
-    #             "two":8,
-    #             "three":12,
-    #             "four":16,
-    #             "five":20,
-    #             "six":0
-    #         },
-    #         "lower":{
-    #             "three_of_a_kind":20,
-    #             "four_of_a_kind":26,
-    #             "full_house":0,
-    #             "small_straight":0,
-    #             "large_straight":40,
-    #             "yahtzee":50,
-    #             "chance":8
-    #         }
-    #     }
-    #     score_info_partial={
-    #         "rolls_remaining":2,
-    #         "upper":{
-    #             "one":4,
-    #             "two":8,
-    #             "three":-1,
-    #             "four":-1,
-    #             "five":-1,
-    #             "six":24
-    #         },
-    #         "lower":{
-    #             "three_of_a_kind":-1,
-    #             "four_of_a_kind":26,
-    #             "full_house":-1,
-    #             "small_straight":0,
-    #             "large_straight":40,
-    #             "yahtzee":0,
-    #             "chance":8
-    #         }
-    #     }
-    #     score_info_partial_bonus={
-    #         "rolls_remaining":2,
-    #         "upper":{
-    #             "one":4,
-    #             "two":8,
-    #             "three":12,
-    #             "four":16,
-    #             "five":20,
-    #             "six":24
-    #         },
-    #         "lower":{
-    #             "three_of_a_kind":-1,
-    #             "four_of_a_kind":26,
-    #             "full_house":-1,
-    #             "small_straight":0,
-    #             "large_straight":40,
-    #             "yahtzee":0,
-    #             "chance":8
-    #         }
-    #     }
+    def test_tally_score_with_scores(self):
+        score_info_finished={
+            "rolls_remaining":0,
+            "upper":{
+                "one":4,
+                "two":8,
+                "three":12,
+                "four":16,
+                "five":20,
+                "six":24
+                },
+                "lower":{
+                    "three_of_a_kind":20,
+                    "four_of_a_kind":26,
+                    "full_house":25,
+                    "small_straight":0,
+                    "large_straight":40,
+                    "yahtzee":50,
+                    "chance":8
+                }
+            }
+        score_info_finished_no_bonus={
+            "rolls_remaining":0,
+            "upper":{
+                "one":4,
+                "two":8,
+                "three":12,
+                "four":16,
+                "five":20,
+                "six":0
+            },
+            "lower":{
+                "three_of_a_kind":20,
+                "four_of_a_kind":26,
+                "full_house":0,
+                "small_straight":0,
+                "large_straight":40,
+                "yahtzee":50,
+                "chance":8
+            }
+        }
+        score_info_partial={
+            "rolls_remaining":2,
+            "upper":{
+                "one":4,
+                "two":8,
+                "three":-1,
+                "four":-1,
+                "five":-1,
+                "six":24
+            },
+            "lower":{
+                "three_of_a_kind":-1,
+                "four_of_a_kind":26,
+                "full_house":-1,
+                "small_straight":0,
+                "large_straight":40,
+                "yahtzee":0,
+                "chance":8
+            }
+        }
+        score_info_partial_bonus={
+            "rolls_remaining":2,
+            "upper":{
+                "one":4,
+                "two":8,
+                "three":12,
+                "four":16,
+                "five":20,
+                "six":24
+            },
+            "lower":{
+                "three_of_a_kind":-1,
+                "four_of_a_kind":26,
+                "full_house":-1,
+                "small_straight":0,
+                "large_straight":40,
+                "yahtzee":0,
+                "chance":8
+            }
+        }
         
-    #     scorecards=[
-    #         (score_info_finished, 288),
-    #         (score_info_finished_no_bonus, 204),
-    #         (score_info_partial, 110),
-    #         (score_info_partial_bonus, 193)
-    #     ]
-    #     for card in scorecards:
-    #         score = self.ScorecardModel.tally_score(card[0])
-    #         self.assertEqual(score, card[1])
-    #     print("test_tally_score_with_scores passed!")  
+        scorecards=[
+            (score_info_finished, 288),
+            (score_info_finished_no_bonus, 204),
+            (score_info_partial, 110),
+            (score_info_partial_bonus, 193)
+        ]
+        for card in scorecards:
+            score = self.ScorecardModel.tally_score(card[0])
+            self.assertEqual(score, card[1])
+        print("test_tally_score_with_scores passed!")  
 
-    # def test_tally_score_blank(self):
-    #     score = self.ScorecardModel.tally_score(self.blank_scorecard)
-    #     self.assertEqual(score, 0)
-    #     print("test_tally_score_blank passed!")  
+    def test_tally_score_blank(self):
+        score = self.ScorecardModel.tally_score(self.blank_scorecard)
+        self.assertEqual(score, 0)
+        print("test_tally_score_blank passed!")  
  
 if __name__ == '__main__':
     unittest.main() 

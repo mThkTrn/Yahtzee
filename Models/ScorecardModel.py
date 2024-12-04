@@ -13,7 +13,7 @@ class Scorecard:
         self.user_table_name = user_table_name
         self.game_table_name = game_table_name
 
-        self.blank_categories =  "".join('''{
+        self.blank_categories =  {
             "dice_rolls":0,
             "upper":{
                 "ones":-1,
@@ -32,7 +32,7 @@ class Scorecard:
                 "yahtzee":-1,
                 "chance":-1
             }
-        }'''.split())
+        }
     
     def initialize_table(self):
         db_connection = sqlite3.connect(self.db_name, )
@@ -69,8 +69,8 @@ class Scorecard:
             while card_id > self.max_safe_id:
                 card_id = random.randint(0, self.max_safe_id)
 
-            query = f"INSERT INTO {self.table_name} (id, game_id, user_id, name, categories, turn_order) VALUES ({card_id}, {game_id}, {user_id}, '{name}', '{self.blank_categories}', {same_game_cards + 1})"
-
+            query = f"INSERT INTO {self.table_name} (id, game_id, user_id, name, categories, turn_order) VALUES ({card_id}, {game_id}, {user_id}, '{name}', '{json.dumps(self.blank_categories)}', {same_game_cards + 1})"
+            # print(f"query: {query}")
             cursor.execute(query)
             db_connection.commit()
 
@@ -97,6 +97,9 @@ class Scorecard:
             
             cursor.execute(query)
             results = cursor.fetchone()
+
+            if not results:
+                return {"status" : "error", "data" : "No such scorecard exits."}
             out = self.to_dict(results)
         
             return {"status" : "success", "data" : out}
@@ -124,8 +127,15 @@ class Scorecard:
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
-            query = f'''SELECT * FROM
-                    {self.table_name} scorecard JOIN {self.game_table_name} game ON scorecard.game_id = game.id'''
+            query = f'''
+                    SELECT * FROM
+                    {self.table_name} scorecard JOIN {self.game_table_name} game ON scorecard.game_id = game.id WHERE game.name = '{game_name}'
+                    '''
+            results = cursor.execute(query).fetchall()
+
+            resultsdict = [self.to_dict(k) for k in results]
+
+            return {"status" : "success", "data" : resultsdict}
 
         except sqlite3.Error as error:
             return {"status":"error",
@@ -137,8 +147,21 @@ class Scorecard:
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
+            query = f'''
+                    SELECT user.username FROM
+                    {self.game_table_name} as game JOIN {self.table_name} as scorecard ON game.id = scorecard.game_id
+                    JOIN {self.user_table_name} as user ON scorecard.user_id = user.id
+                    WHERE game.name = {game_name}
+                    '''
+            results = cursor.execute(query).fetchall()
+
+            resultsdict = [k[0] for k in results]
+
+            return {"status" : "success", "data" : resultsdict}
 
         except sqlite3.Error as error:
+            print( {"status":"error",
+                    "data":error})
             return {"status":"error",
                     "data":error}
         finally:
@@ -155,7 +178,7 @@ class Scorecard:
         finally:
             db_connection.close()
 
-    def update(self, id, name=None, score_info=None): 
+    def update(self, id, name=None, categories=None): 
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
@@ -211,8 +234,14 @@ class Scorecard:
         }
 
     def tally_score(self, score_info):
-        total_score = 0
-   
+
+        total_score = sum(score_info["upper"].values()) + sum(score_info["lower"].values())
+
+        if sum(score_info["upper".values]) >= 63:
+            total_score += 35
+        
+        total_score += score_info["upper"].values().count(-1) + score_info["lower"].values().count(-1)
+
         return total_score
 
 if __name__ == '__main__':
