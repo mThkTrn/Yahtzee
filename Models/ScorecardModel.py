@@ -13,8 +13,8 @@ class Scorecard:
         self.user_table_name = user_table_name
         self.game_table_name = game_table_name
 
-        self.blank_categories = '''{
-            "dice_rolls":3,
+        self.blank_categories =  "".join('''{
+            "dice_rolls":0,
             "upper":{
                 "ones":-1,
                 "twos":-1,
@@ -32,7 +32,7 @@ class Scorecard:
                 "yahtzee":-1,
                 "chance":-1
             }
-        }'''
+        }'''.split())
     
     def initialize_table(self):
         db_connection = sqlite3.connect(self.db_name, )
@@ -60,10 +60,16 @@ class Scorecard:
             cursor = db_connection.cursor()
             card_id = random.randint(0, self.max_safe_id)
 
+            same_game_cards = len(cursor.execute(f"SELECT * FROM {self.table_name} WHERE game_id = {game_id}").fetchall())
+
+            if cursor.execute(f"SELECT * FROM {self.table_name} WHERE user_id = {user_id} AND game_id = {game_id}").fetchall() or same_game_cards >= 4:
+                return {"status" : "error",
+                        "data" : "There is already a scorecard for that game and user."}
+            
             while card_id > self.max_safe_id:
                 card_id = random.randint(0, self.max_safe_id)
 
-            query = "INSERT INTO {self.table_name} id = {card_id}, game_id = {game_id}, user_id = {user_id}, name = '{name}', categories = '{self.blank_categories}', turn_order = 1"
+            query = f"INSERT INTO {self.table_name} (id, game_id, user_id, name, categories, turn_order) VALUES ({card_id}, {game_id}, {user_id}, '{name}', '{self.blank_categories}', {same_game_cards + 1})"
 
             cursor.execute(query)
             db_connection.commit()
@@ -92,8 +98,8 @@ class Scorecard:
             cursor.execute(query)
             results = cursor.fetchone()
             out = self.to_dict(results)
-
-            return {"status" : "success", "data" : self.to_dict(out)}
+        
+            return {"status" : "success", "data" : out}
 
         except sqlite3.Error as error:
             return {"status":"error",
@@ -243,4 +249,6 @@ if __name__ == '__main__':
             }
         }'''
     
-    Scorecard.create(1, 1, "bob", statedict)
+    out = Scorecards.create(1, 1, "bob")
+
+    print(out)
