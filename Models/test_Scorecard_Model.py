@@ -500,6 +500,7 @@ class Scorecard_Model_Tests(unittest.TestCase):
             user = list(self.users.values())[i]  
             game = list(self.games.values())[i]
             new_scorecard = self.ScorecardModel.create(game["id"], user["id"], game["name"]+"|"+user["username"])
+            print(f"new scorecard user games: {new_scorecard}")
         
         username_to_check = list(self.users.values())[1]['username']
         game_name_to_check = list(self.games.values())[1]['name']

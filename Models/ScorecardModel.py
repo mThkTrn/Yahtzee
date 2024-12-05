@@ -1,3 +1,5 @@
+#Madhavendra Thakur
+
 import sqlite3
 import random
 import json
@@ -151,8 +153,11 @@ class Scorecard:
                     SELECT user.username FROM
                     {self.game_table_name} as game JOIN {self.table_name} as scorecard ON game.id = scorecard.game_id
                     JOIN {self.user_table_name} as user ON scorecard.user_id = user.id
-                    WHERE game.name = {game_name}
+                    WHERE game.name = '{game_name}'
                     '''
+            
+            print(query)
+
             results = cursor.execute(query).fetchall()
 
             resultsdict = [k[0] for k in results]
@@ -171,28 +176,67 @@ class Scorecard:
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
+            query = f'''
+                    SELECT game.name FROM
+                    {self.game_table_name} as game JOIN {self.table_name} as scorecard ON game.id = scorecard.game_id
+                    JOIN {self.user_table_name} as user ON scorecard.user_id = user.id
+                    WHERE user.username = '{username}'
+                    '''
+            
+            print(query)
+
+            results = cursor.execute(query).fetchall()
+
+            resultsdict = [k[0] for k in results]
+
+            return {"status" : "success", "data" : resultsdict}
 
         except sqlite3.Error as error:
+            print( {"status":"error",
+                    "data":error})
             return {"status":"error",
                     "data":error}
         finally:
             db_connection.close()
 
     def update(self, id, name=None, categories=None): 
-        try: 
+        # try: 
+
             db_connection = sqlite3.connect(self.db_name)
+
+            # if not self.validate(game_info, update=True):
+            #     return {"status" : "error", "data" : "The format of the input data is invalid"}
+            
+            # if not self.exists(id = id, update = True)["data"]:
+            #     return {"status": "error", "data" : "Game does not exist."}
+            
             cursor = db_connection.cursor()
 
-        except sqlite3.Error as error:
-            return {"status":"error",
-                    "data":error}
-        finally:
-            db_connection.close()
+            if not cursor.execute(f"SELECT * FROM {self.table_name} WHERE id = {id}").fetchall():
+                return {"status" : "error", "data" : "scorecard does not exist."}
+
+            execstring = f"UPDATE {self.table_name} SET name = '{name}', categories = '{json.dumps(categories)}'"
+
+            print(execstring)
+            cursor.execute(execstring)
+            
+            db_connection.commit()
+
+            return {"status": "success", "data" : self.get(id = id)["data"]}
 
     def remove(self, id): 
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
+            out = self.get(id = id)
+            if not out:
+                return{"status" : "error", "data" : "No such scorecard exists to remove"}
+            
+            cursor.execute(f"DELETE FROM {self.table_name} WHERE id = {id}")
+
+            db_connection.commit()
+
+            return out
 
         except sqlite3.Error as error:
             return {"status":"error",
@@ -237,10 +281,10 @@ class Scorecard:
 
         total_score = sum(score_info["upper"].values()) + sum(score_info["lower"].values())
 
-        if sum(score_info["upper".values]) >= 63:
+        if sum(score_info["upper"].values()) >= 63:
             total_score += 35
         
-        total_score += score_info["upper"].values().count(-1) + score_info["lower"].values().count(-1)
+        total_score += list(score_info["upper"].values()).count(-1) + list(score_info["lower"].values()).count(-1)
 
         return total_score
 
@@ -278,6 +322,8 @@ if __name__ == '__main__':
             }
         }'''
     
-    out = Scorecards.create(1, 1, "bob")
+    # out = Scorecards.create(1, 1, "bob")
+    # print(out)
 
+    out = Scorecards.get_all_game_usernames(1188933686312045)
     print(out)
