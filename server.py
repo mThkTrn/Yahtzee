@@ -1,25 +1,40 @@
-from flask import Flask, render_template, request
+from flask import Flask
+from flask import request
 import os
+import sys
 
-def create_app(config=None):
-    app = Flask(__name__, static_url_path='', static_folder="static")
-    app.config.update(dict(DEBUG=True))
-    app.config.update(config or {})
+#Connect Controller definitions
+fpath = os.path.join(os.path.dirname(__file__), 'controllers')
+sys.path.append(fpath)
+fpath = os.path.join(os.path.dirname(__file__), 'models')
+sys.path.append(fpath)
+from Controllers import GameController, SessionController, ScorecardController, UserController
 
-    @app.route("/game")
-    def game():
-        username = request.args.get("username_input")
-        password = request.args.get("password_input")
-        return render_template("game.html", username = username, password = password)
 
-    @app.route("/")
-    def login():
-        return render_template("login.html")
-    
-    return app
+app = Flask(__name__, static_url_path='', static_folder='static')
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app = create_app()
-    app.run(host="0.0.0.0", port=port)
+#The Router section of our application conects routes to Contoller methods
+app.add_url_rule('/', view_func=SessionController.login, methods = ['GET'])
+app.add_url_rule('/index', view_func=SessionController.login, methods = ['GET'])
+app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
 
+app.add_url_rule('/fruit', view_func=FruitController.fruit, methods = ['POST', 'GET'])
+app.add_url_rule('/fruit/<fruit_name>', view_func=FruitController.single_fruit, methods = ['GET'])
+#SESSION CONTROLLER
+
+app.add_url_rule('/', view_func=SessionController.login, methods = ["GET"])
+
+app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
+
+#GAME CONTROLLER
+
+app.add_url_rule('/games/<username>', view_func=GameController.user, methods = ['GET'])
+
+app.add_url_rule('/games', view_func=GameController, methods = ['GET'])
+
+#SCORECARD CONTROLLER
+
+
+
+#Start the server
+app.run(debug=True, port=5000)
