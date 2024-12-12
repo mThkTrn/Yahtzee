@@ -21,3 +21,5 @@ def fruit():
     #curl -X POST -H "Content-type: application/json" -d '{ "name" : "tomato", "url":"https://en.wikipedia.org/wiki/Tomato"}' "http://127.0.0.1:5000/fruit/new"
     elif request.method == 'POST':
         return jsonify(Fruit.create_fruit(request.form))
+
+def 

@@ -18,8 +18,6 @@ app.add_url_rule('/', view_func=SessionController.login, methods = ['GET'])
 app.add_url_rule('/index', view_func=SessionController.login, methods = ['GET'])
 app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
 
-app.add_url_rule('/fruit', view_func=FruitController.fruit, methods = ['POST', 'GET'])
-app.add_url_rule('/fruit/<fruit_name>', view_func=FruitController.single_fruit, methods = ['GET'])
 #SESSION CONTROLLER
 
 app.add_url_rule('/', view_func=SessionController.login, methods = ["GET"])
