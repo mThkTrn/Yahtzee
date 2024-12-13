@@ -3,9 +3,11 @@
 import sqlite3
 import random
 import re
+import os
 
 class User:
-    def __init__(self, db_name, table_name):
+    def __init__(self, db_name, table_name="users"):
+        print(db_name)
         self.db_name =  db_name
         self.max_safe_id = 9007199254740991 #maximun safe Javascript integer
         self.table_name = table_name

@@ -13,26 +13,35 @@ from Controllers import GameController, SessionController, ScorecardController, 
 
 app = Flask(__name__, static_url_path='', static_folder='static')
 
-#The Router section of our application conects routes to Contoller methods
-app.add_url_rule('/', view_func=SessionController.login, methods = ['GET'])
-app.add_url_rule('/index', view_func=SessionController.login, methods = ['GET'])
-app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
+# #SESSION CONTROLLER
 
-#SESSION CONTROLLER
+# app.add_url_rule('/', view_func=SessionController.entry, methods = ["GET"])
 
-app.add_url_rule('/', view_func=SessionController.login, methods = ["GET"])
+# app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
 
-app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
+# #GAME CONTROLLER
 
-#GAME CONTROLLER
+# app.add_url_rule('/games/<username>', view_func=GameController.user, methods = ['GET'])
 
-app.add_url_rule('/games/<username>', view_func=GameController.user, methods = ['GET'])
+# app.add_url_rule('/games', view_func=GameController.create, methods = ['POST'])
 
-app.add_url_rule('/games', view_func=GameController, methods = ['GET'])
+# app.add_url_rule('/games/join', view_func=GameController.join, methods = ['POST'])
 
-#SCORECARD CONTROLLER
+# app.add_url_rule('/games/delete/<game_name>/<username>', view_func=GameController.delete, methods = ['GET'])
 
+# app.add_url_rule('/games/<game_name>/<user_name>', view_func=GameController.get, methods = ['GET'])
 
+# #SCORECARD CONTROLLER
+
+# app.add_url_rule('/scorecard/<scorecard_id>', view_func=ScorecardController.update, methods = ['GET'])
+
+#USER CONTROLLER
+
+app.add_url_rule('/users', view_func=UserController.read_user_create, methods = ['GET'])
+app.add_url_rule('/users/<username>', view_func=UserController.read_user_update_delete, methods = ['GET'])
+app.add_url_rule('/users', view_func=UserController.create_user, methods = ['POST'])
+app.add_url_rule('/users/<username>', view_func=UserController.update_user, methods = ['POST'])
+app.add_url_rule('/users/delete/<username>', view_func=UserController.delete_user, methods = ['GET'])
 
 #Start the server
-app.run(debug=True, port=5000)
+app.run(debug=True, port=8080)

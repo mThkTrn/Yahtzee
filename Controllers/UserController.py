@@ -1,5 +1,6 @@
 from flask import jsonify
 from flask import request
+from flask import render_template
 import os
 
 from Models import UserModel
@@ -22,4 +23,26 @@ def fruit():
     elif request.method == 'POST':
         return jsonify(Fruit.create_fruit(request.form))
 
-def 
+def create_user():
+    user_info = {
+        "email": request.form.get("email"),
+        "username": request.form.get("username"),
+        "password": request.form.get("password")
+    }
+    out = Users.create(user_info=user_info)
+    #f"User {request.form.get("username")} was successfully created"
+    try:
+        message = f"User '{(out["data"]["username"])}' created."
+    except:
+        message = out["data"]
+    return render_template("create.html", message = message)
+def delete_user():
+    pass
+def update_user():
+    pass
+def read_user_create():
+    print("running!")
+    return render_template("create.html", message = "")
+def read_user_update_delete():
+    pass
+

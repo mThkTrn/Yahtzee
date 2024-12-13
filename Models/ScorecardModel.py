@@ -3,12 +3,12 @@
 import sqlite3
 import random
 import json
-
+import os
 from UserModel import User
 from GameModel import Game
 
 class Scorecard:
-    def __init__(self, db_name, scorecard_table_name, user_table_name, game_table_name):
+    def __init__(self, db_name, scorecard_table_name="scorecards", user_table_name="users", game_table_name="games"):
         self.db_name =  db_name
         self.max_safe_id = 9007199254740991 #maximun safe Javascript integer
         self.table_name = scorecard_table_name 
@@ -316,7 +316,7 @@ if __name__ == '__main__':
                 "four_of_a_kind":-1,
                 "full_house":-1,
                 "small_straight":-1,
-                "large_straight":-1,
+                "large_straight":-1,x`
                 "yahtzee":-1,
                 "chance":-1
             }
