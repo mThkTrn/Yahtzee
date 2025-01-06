@@ -45,7 +45,13 @@ def update_user():
         "username": request.form.get("username"),
         "password": request.form.get("password")
     }
-    out = Users.update(user_info=user_info)
+    user_info_updating = Users.get(username = user_info["username"])["data"]
+
+    user_info_updating["email"] = user_info["email"]
+    user_info_updating["username"] = user_info["username"]
+    user_info_updating["password"] = user_info["password"]
+
+    out = Users.update(user_info=user_info_updating)
     try:
         message = f"User '{(out['data']['username'])}' updated."
     except:
@@ -54,6 +60,9 @@ def update_user():
 def read_user_create():
     print("running!")
     return render_template("create.html", message = "")
-def read_user_update_delete():
-    return render_template("create.html", purpose = "update")
+def read_user_update_delete(username):
+    if not Users.exists(username=username)["data"]:
+        return render_template("create.html", purpose = "update", message = "Specified user does not exist.")
+    else: 
+        return render_template("create.html", purpose = "update", message = "")
 

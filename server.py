@@ -42,6 +42,8 @@ app.add_url_rule('/users/<username>', view_func=UserController.read_user_update_
 app.add_url_rule('/users', view_func=UserController.create_user, methods = ['POST'])
 app.add_url_rule('/users/<username>', view_func=UserController.update_user, methods = ['POST'])
 app.add_url_rule('/users/delete/<username>', view_func=UserController.delete_user, methods = ['GET'])
+app.add_url_rule("/users/update", view_func=UserController.update_user, methods = ['POST'])
+app.add_url_rule("/users/delete", view_func=UserController.delete_user, methods = ['POST'])
 
 #Start the server
 app.run(debug=True, port=8080)

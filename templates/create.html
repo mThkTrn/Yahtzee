@@ -20,15 +20,15 @@
 
         {% if purpose == "update" %}
         <!-- Submit Button 1 -->
-        <button type="submit" formaction="https://www.geeksforgeeks.org/" 
-                name="submit_type" value="submit_1">
-            Submit 1
+        <button type="submit" formaction="/users/delete" 
+                name="delete" value="submit_1">
+            DELETE
         </button>
 
         <!-- Submit Button 2 -->
-        <button type="submit" formaction="https://www.geeksforgeeks.org/about/" 
-                name="submit_type" value="submit_2">
-            Submit 2
+        <button type="submit" formaction="/users/update" 
+                name="update" value="submit_2" id = "user_details_submit">
+            UPDATE
         </button>
         {% else %}
         <input type="submit" value="CREATE" id = "user_details_submit">
