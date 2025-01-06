@@ -32,17 +32,28 @@ def create_user():
     out = Users.create(user_info=user_info)
     #f"User {request.form.get("username")} was successfully created"
     try:
-        message = f"User '{(out["data"]["username"])}' created."
+        message = f"User '{(out['data']['username'])}' created."
+        return render_template("user_games.html")
     except:
         message = out["data"]
-    return render_template("create.html", message = message)
+        return render_template("create.html", message = message)
 def delete_user():
     pass
 def update_user():
-    pass
+    user_info = {
+        "email": request.form.get("email"),
+        "username": request.form.get("username"),
+        "password": request.form.get("password")
+    }
+    out = Users.update(user_info=user_info)
+    try:
+        message = f"User '{(out['data']['username'])}' updated."
+    except:
+        message = out["data"]
+        return render_template("create.html", purpose = "update", message = message)
 def read_user_create():
     print("running!")
     return render_template("create.html", message = "")
 def read_user_update_delete():
-    pass
+    return render_template("create.html", purpose = "update")
 

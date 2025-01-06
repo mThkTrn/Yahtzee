@@ -18,7 +18,22 @@
         <label for="password">Password:</label>
         <input type="password" name="password" id="password_input">
 
+        {% if purpose == "update" %}
+        <!-- Submit Button 1 -->
+        <button type="submit" formaction="https://www.geeksforgeeks.org/" 
+                name="submit_type" value="submit_1">
+            Submit 1
+        </button>
+
+        <!-- Submit Button 2 -->
+        <button type="submit" formaction="https://www.geeksforgeeks.org/about/" 
+                name="submit_type" value="submit_2">
+            Submit 2
+        </button>
+        {% else %}
         <input type="submit" value="CREATE" id = "user_details_submit">
+        {% endif %}
+        
     </form>
 </body>
 </html>

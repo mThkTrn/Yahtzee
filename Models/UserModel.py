@@ -7,7 +7,9 @@ import os
 
 class User:
     def __init__(self, db_name, table_name="users"):
+        print("########")
         print(db_name)
+        print("###########")
         self.db_name =  db_name
         self.max_safe_id = 9007199254740991 #maximun safe Javascript integer
         self.table_name = table_name
@@ -37,7 +39,7 @@ class User:
             if not re.search("^[a-zA-Z0-9_-]*$", user_info["username"]):
                 return False
             
-            if "@" not in user_info["email"] or "." not in user_info["email"]:
+            if "@" not in user_info["email"] or "." not in user_info["email"] or " " in user_info["email"]:
                 return False
             
             if len(user_info["password"]) < 8:
