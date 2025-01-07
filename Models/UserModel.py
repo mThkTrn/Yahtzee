@@ -87,8 +87,10 @@ class User:
             db_connection.close()
 
     def create(self, user_info):
+       
+        db_connection = sqlite3.connect(self.db_name)
+       
         try:
-            db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
 
             unique = False

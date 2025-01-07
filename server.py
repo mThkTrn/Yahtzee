@@ -44,5 +44,10 @@ app.add_url_rule('/users/<username>', view_func=UserController.update_user, meth
 app.add_url_rule('/users/delete/<username>', view_func=UserController.delete_user, methods = ['GET'])
 app.add_url_rule("/users/update", view_func=UserController.update_user, methods = ['POST'])
 
+# SESSION CONTROLLER
+
+app.add_url_rule("/", view_func=SessionController.index, methods = ['GET'])
+app.add_url_rule("/login", view_func=SessionController.login, methods = ['GET'])
+
 #Start the server
 app.run(debug=True, port=8080)

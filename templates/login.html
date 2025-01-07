@@ -10,7 +10,9 @@
 
 <h1>Login</h1>
 
-<form action="game" method="get">
+<section id = "feedback">{{message}}</section>
+
+<form action="/login" method="get">
 
     <label for="username_input">Username</label>
     <input type="text" name = "username_input" id = "username_input">
@@ -18,7 +20,9 @@
     <label for="password_input">Password</label>
     <input type="password" name = "password_input" id = "password_input">
 
-    <input type="submit" id = "login_submit">
+    <input type="submit" id = "login_submit" value = "LOGIN">
+
+    <input type = "submit" formaction="/users" id = "create_submit">CREATE</input>
 </form>
 {%include "partial/footer.html"%}
 </body>

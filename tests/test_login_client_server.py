@@ -10,8 +10,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from DB_Helper import wipe_and_clean_tables
 
-fpath = os.path.join(os.path.dirname(__file__), '../Models') #Assumes this file lives in a tests folder next to the Models folder
+fpath = os.path.join(os.path.dirname(__file__), '/Models') #Assumes this file lives in a tests folder next to the Models folder
 sys.path.append(fpath)
+
 import UserModel as User_Model
 
 '''
@@ -64,7 +65,7 @@ class Basic_Login_Tests(unittest.TestCase):
         self.browser = webdriver.Chrome()
         self.addCleanup(self.browser.quit)
 
-        self.DB_location=f"{os.getcwd()}/../Models/yahtzeeDB.db" #Assumes DB lives in the Models folder which is right next to the tests folder
+        self.DB_location=f"{os.getcwd()}/Models/yahtzeeDB.db" #Assumes DB lives in the Models folder which is right next to the tests folder
         self.user_table_name = "users"
         self.game_table_name = "games"
         self.scorecard_table_name = "scorecard"
