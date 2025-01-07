@@ -6,34 +6,32 @@
     <title>Yahtzee: User Details</title>
 </head>
 <body>
+    <!--  {{email}}, {{username}}, {{password}}  -->
     <h1>Yahtzee: User Details</h1>
     <section id = "feedback">{{message}}</section>
     <form action="/users" method="post">
+        <input type="text" name="user_id" id="user_id_input" value="{{user_id}}" readonly display = "none">
         <label for="email">Email:</label>
-        <input type="text" name="email" id="email_input">
+        <input type="text" name="email" id="email_input" value = "{{email}}">
 
         <label for="username">Username:</label>
-        <input type="text" name="username" id="username_input">
+        <input type="text" name="username" id="username_input" value = "{{username}}">
 
         <label for="password">Password:</label>
-        <input type="password" name="password" id="password_input">
+        <input type="password" name="password" id="password_input" value = "{{password}}">
 
         {% if purpose == "update" %}
-        <!-- Submit Button 1 -->
-        <button type="submit" formaction="/users/delete" 
-                name="delete" value="submit_1">
-            DELETE
-        </button>
 
         <!-- Submit Button 2 -->
-        <button type="submit" formaction="/users/update" 
-                name="update" value="submit_2" id = "user_details_submit">
-            UPDATE
-        </button>
+        <input type="submit" formaction="/users/update" 
+               name="update" value="UPDATE" id="user_details_submit">
         {% else %}
         <input type="submit" value="CREATE" id = "user_details_submit">
         {% endif %}
         
+    </form>
+        <input type="text" name="user_id" id="user_id_input" value="{{user_id}}" readonly display = "none">
+    <input type="submit" name="delete" value="DELETE" id = "user_details_delete_submit">
     </form>
 </body>
 </html>

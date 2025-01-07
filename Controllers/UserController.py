@@ -37,21 +37,43 @@ def create_user():
     except:
         message = out["data"]
         return render_template("create.html", message = message)
-def delete_user():
-    pass
+def delete_user(username):
+    print("delete_user running")
+
+    out = Users.remove(username=username)
+
+    print(out)
+
+    try:
+        message = f"User '{(out['data']['username'])}' deleted."
+        return render_template("user_games.html", message = message)
+    except:
+        message = out["data"]
+        return render_template("user_games.html", message = message)
+
 def update_user():
+    print("update_user running")
     user_info = {
         "email": request.form.get("email"),
         "username": request.form.get("username"),
-        "password": request.form.get("password")
+        "password": request.form.get("password"),
+        "user_id": request.form.get("user_id")
     }
-    user_info_updating = Users.get(username = user_info["username"])["data"]
+    user_info_updating = Users.get(id = user_info["user_id"])
+
+    print(user_info_updating)
+
+    user_info_updating = user_info_updating["data"]
 
     user_info_updating["email"] = user_info["email"]
     user_info_updating["username"] = user_info["username"]
     user_info_updating["password"] = user_info["password"]
 
+    print(user_info_updating)
+    
     out = Users.update(user_info=user_info_updating)
+
+    print(out)
     try:
         message = f"User '{(out['data']['username'])}' updated."
     except:
@@ -61,8 +83,17 @@ def read_user_create():
     print("running!")
     return render_template("create.html", message = "")
 def read_user_update_delete(username):
+
+    print("read_user_update_delete running")
+
+    user_info_updating = Users.get(username = username)
+
+    print(user_info_updating)
+
+    # print(user_info_updating["data"]["username"], user_info_updating["data"]["email"], user_info_updating["data"]["password"])
+
     if not Users.exists(username=username)["data"]:
         return render_template("create.html", purpose = "update", message = "Specified user does not exist.")
     else: 
-        return render_template("create.html", purpose = "update", message = "")
+        return render_template("create.html", purpose = "update", message = "", user_id = user_info_updating["data"]["id"], username = user_info_updating["data"]["username"], email = user_info_updating["data"]["email"], password = user_info_updating["data"]["password"])
 

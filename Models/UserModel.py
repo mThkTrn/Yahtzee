@@ -7,9 +7,9 @@ import os
 
 class User:
     def __init__(self, db_name, table_name="users"):
-        print("########")
-        print(db_name)
-        print("###########")
+        # print("########")
+        # print(db_name)
+        # print("###########")
         self.db_name =  db_name
         self.max_safe_id = 9007199254740991 #maximun safe Javascript integer
         self.table_name = table_name
@@ -170,7 +170,7 @@ class User:
             if not self.exists(id = user_info["id"])["data"]:
                 return {"status": "error", "data" : "User does not exist."}
             
-            if not self.validate(user_info):
+            if not self.validate(user_info, user_id=user_info["id"]):
                 return {"status" : "error", "data" : "The format of the input data is incorrect"}
             
             cursor = db_connection.cursor()
