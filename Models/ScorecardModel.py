@@ -287,6 +287,38 @@ class Scorecard:
         total_score += list(score_info["upper"].values()).count(-1) + list(score_info["lower"].values()).count(-1)
 
         return total_score
+    
+    def get_user_high_scores(self, username):
+
+        db_connection = sqlite3.connect(self.db_name)
+            
+        cursor = db_connection.cursor()
+
+        query = f'''
+            SELECT scorecard.categories, game.name FROM
+            {self.game_table_name} as game JOIN {self.table_name} as scorecard ON game.id = scorecard.game_id
+            JOIN {self.user_table_name} as user ON scorecard.user_id = user.id
+            WHERE user.username = '{username}'
+        '''
+
+        
+        results = cursor.execute(query).fetchall()
+
+        # print("ScorecardModel", results)
+
+        print("---")
+        print("three_of_a_kind", (self.tally_score(json.loads(results[0][0])), results[0][1]))
+
+        resultslist = [(self.tally_score(json.loads(k[0])), k[1]) for k in results]
+        
+        print("ScorecardModel", resultslist)
+        
+        resultslist.sort(key = lambda x : -x[0])
+
+        print("ScorecardModel", resultslist)
+
+        return {"status" : "success", "data" : resultslist}
+
 
 if __name__ == '__main__':
     import os

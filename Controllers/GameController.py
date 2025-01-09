@@ -3,11 +3,17 @@ from flask import request
 from flask import render_template
 import os
 
-from Models import UserModel
+from Models import UserModel, GameModel, ScorecardModel
 
 DB_location=f"{os.getcwd()}/Models/yahtzeeDB.db"
 table_name = "users"
 Users = UserModel.User(DB_location, table_name)
+
+table_name = "games"
+Games = GameModel.Game(DB_location, table_name)
+
+table_name = "scorecard"
+Scorecard = ScorecardModel.Scorecard(DB_location, table_name)
 
 # def fruit():
 #     print(f"request.method= {request.method} request.url={request.url}")
@@ -23,31 +29,33 @@ Users = UserModel.User(DB_location, table_name)
 #     elif request.method == 'POST':
 #         return jsonify(Fruit.create_fruit(request.form))
 
-def login():
+def game_index(username):
 
-    print("running login")
-
-    user_info = {
-        "username": request.args.get("username"),
-        "password": request.args.get("password")
-    }
-    
-    out = Users.get(username=user_info["username"])
-    #f"User {request.form.get("username")} was successfully created"
-
-    print(user_info)
-    print(out)
-
-    try:
-        if out["data"]["password"] == user_info["password"]:
-            return render_template("user_games.html")
-        else:
-            message = out["data"]
-            return render_template("login.html", message = message)
-    except:
-        message = out["data"]
+    if not Users.exists(username=username)["data"]:
+        message = "User for user_games did not exist!"
         return render_template("login.html", message = message)
-    
-def index():
+
+    gameslist = Scorecard.get_all_user_game_names(username=username)["data"]
+
+    scoreslist = Scorecard.get_user_high_scores(username = username)
+
+    print("###")
+    print("scoreslist", scoreslist)
+    print("###")
+
+    scoreslist = scoreslist["data"][:4]
+
+    return render_template("user_games.html", gameslist = gameslist, scoreslist = scoreslist)
+
+def game_create():
+    return render_template("user_games.html")
+
+def game_join():
+    return render_template("user_games.html")
+
+def game_remove(game_name, user_name):
     return render_template("login.html")
+
+def game_get(game_name, user_name):
+    return render_template("yahtzee.html")
 

@@ -1,153 +1,59 @@
-<html>
-    <head>
-      {%include "partial/header.html"%}
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Yahtzee: User Games</title>
-    </head>
-    <body>
-      <h1>Yahtzee: {{username}}</h1>
-      <small>Password: {{password}}</small>
-        <section id="save_and_load">
-            <table>
-                <tr>                
-                    <td colspan="2"><button id="save_game" type="button">Save Game</button></td>
-                    <td colspan="2"><button id="load_game" type="button">Load Game</button></td>
-                </tr>
-            </table>
-        </section>
-        <section id="dice">
-            <table>
-              <tr>
-                <td><img id="die_0" class="die" src="/img/blank.svg" width="70" /></td>
-                <td><img id="die_1" class="die" src="/img/blank.svg" width="70" /></td>
-                <td><img id="die_2" class="die" src="/img/blank.svg" width="70" /></td>
-                <td><img id="die_3" class="die" src="/img/blank.svg" width="70" /></td>
-                <td><img id="die_4" class="die" src="/img/blank.svg" width="70" /></td>
-              </tr>
-              <tr>
-                <td colspan="3">Rolls remaining: <span id="rolls_remaining">3</span></td>
-                <td colspan="2"><button id="roll_button" type="button">Roll the Dice!</button></td>
-              </tr>
-            </table>
-            <br>
-          </section>
-        
-          <section id="feedback"></section>
-        
-          <section id="scorecard">
-            <table>
-              <tr>
-                <th>UPPER SECTION</th>
-                <th>HOW TO SCORE</th>
-                <th>#1</th>
-              </tr>
-              <tr>
-                <td>one <img src="/img/one.svg" width="20" /> =1</td>
-                <td>Count and Add Only one</td>
-                <td><input type="text" class="upper category" id="one_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>two <img src="/img/two.svg" width="20" /> =2</td>
-                <td>Count and Add Only two</td>
-                <td><input type="text" class="upper category" id="two_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>three <img src="/img/three.svg" width="20" /> =3</td>
-                <td>Count and Add Only three</td>
-                <td><input type="text" class="upper category" id="three_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>four <img src="/img/four.svg" width="20" /> =4</td>
-                <td>Count and Add Only four</td>
-                <td><input type="text" class="upper category" id="four_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>five <img src="/img/five.svg" width="20" /> =5</td>
-                <td>Count and Add Only five</td>
-                <td><input type="text" class="upper category" id="five_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>six <img src="/img/six.svg" width="20" /> =6</td>
-                <td>Count and Add Only six</td>
-                <td><input type="text" class="upper category" id="six_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>TOTAL SCORE</td>
-                <td> -- </td>
-                <td class="upper score" id="upper_score"></td>
-              </tr>
-              <tr>
-                <td>BONUS</td>
-                <td> If total score is more than 63, score 35 </td>
-                <td class="upper score" id="upper_bonus"></td>
-              </tr>
-              <tr>
-                <td>TOTAL</td>
-                <td> of upper section </td>
-                <td class="upper score" id="upper_total"></td>
-              </tr>
-              <tr>
-                <th>LOWER SECTION</th>
-                <th></th>
-                <th></th>
-              </tr>
-              <tr>
-                <td>3 of a kind</td>
-                <td>Add Total of All Dice</td>
-                <td><input type="text" class="lower category" id="three_of_a_kind_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>4 of a kind</td>
-                <td>Add Total of All Dice</td>
-                <td><input type="text" class="lower category" id="four_of_a_kind_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>Full House</td>
-                <td>Score 25</td>
-                <td><input type="text" class="lower category" id="full_house_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>Small Straight (Sequence of 4)</td>
-                <td>Score 30</td>
-                <td><input type="text" class="lower category" id="small_straight_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>Large Straight (Sequence of 5)</td>
-                <td>Score 40</td>
-                <td><input type="text" class="lower category" id="large_straight_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>Yahtzee (5 of a kind)</td>
-                <td>Score 50</td>
-                <td><input type="text" class="lower category" id="yahtzee_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>Chance</td>
-                <td>Score Total Of all 5 Dice</td>
-                <td><input type="text" class="lower category" id="chance_input" size="3"></td>
-              </tr>
-              <tr>
-                <td>Total (Of Lower Section) </td>
-                <td></td>
-                <td class="lower score" id="lower_score"></td>
-              </tr>
-              <tr>
-                <td>Total (Of Upper Section)</td>
-                <td></td>
-                <td class="lower score" id="upper_total_lower"></td>
-              </tr>
-              <tr>
-                <td>Grand Total </td>
-                <td></td>
-                <td class="lower score" id="grand_total"></td>
-              </tr>
-            </table>
-          </section>
-          
-          {%include "partial/footer.html"%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
-          <script src="/js/UI.js"  type="module"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yahtzee: User Games</title>
+</head>
+<body>
+    <!--  {{email}}, {{username}}, {{password}}  -->
+    <h1>Yahtzee: User Games</h1>
+    <section id = "feedback">{{message}}</section>
 
-    </body>
+    <ol id="games_list">
+
+      {% for game in gameslist %}
+
+      <li>
+        <a href = "/games/{{game['name']}}/{{username}}">{{game}}</a>
+        <a href="/games/delete/{{game['name']}}/{{username}}">DELETE></a>
+      </li>
+
+      {% endfor %}
+
+
+    </ol>
+
+    <ol id="high_scores_list">
+      {% for score in scoreslist %}
+        <li>{{ score[1] }} : {{ score[0] }}</li>
+      {% endfor %}
+    </ol>
+    
+    <!-- <form action="/users" method="post">
+        <input type="hidden" name="user_id" id="user_id_input" value="{{user_id}}" readonly>
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email_input" value = "{{email}}">
+
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username_input" value = "{{username}}">
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password_input" value = "{{password}}">
+
+        {% if purpose == "update" %}
+
+        <!-- Submit Button 2 -->
+        <input type="submit" formaction="/users/update" 
+               name="update" value="UPDATE" id="user_details_submit">
+        {% else %}
+        <input type="submit" value="CREATE" id = "user_details_submit">
+        {% endif %}
+        
+    </form> -->
+        <input type="text" name="user_id" id="user_id_input" value="{{user_id}}" readonly display = "none">
+    <input type="submit" name="delete" value="DELETE" id = "user_details_delete_submit">
+    </form>
+</body>
 </html>

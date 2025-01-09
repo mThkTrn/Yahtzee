@@ -49,5 +49,13 @@ app.add_url_rule("/users/update", view_func=UserController.update_user, methods 
 app.add_url_rule("/", view_func=SessionController.index, methods = ['GET'])
 app.add_url_rule("/login", view_func=SessionController.login, methods = ['GET'])
 
+# SESSION CONTROLLER
+
+app.add_url_rule("/games/<username>", view_func=GameController.game_index, methods = ['GET'])
+app.add_url_rule("/games", view_func=GameController.game_create, methods = ['POST'])
+app.add_url_rule("/games/join", view_func=GameController.game_join, methods = ['POST'])
+app.add_url_rule("/games/delete/<game_name>/<user_name>", view_func=GameController.game_remove, methods = ['GET'])
+app.add_url_rule("/games/<game_name>/<user_name>", view_func=GameController.game_get, methods = ['GET'])
+
 #Start the server
 app.run(debug=True, port=8080)
