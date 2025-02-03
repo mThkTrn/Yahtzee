@@ -30,9 +30,11 @@
         <input type="submit" value="CREATE" id = "user_details_submit">
         {% endif %}
         
-    </form>
-        <input type="text" name="user_id" id="user_id_input" value="{{user_id}}" readonly display = "none">
-    <input type="submit" name="delete" value="DELETE" id = "user_details_delete_submit">
-    </form>
+    <!-- </form action = "/users/delete/{{username}}" method = "get">
+        <input type="submit" formaction = "/users/delete/{{username}}" name="delete" value="DELETE" id = "user_details_delete_submit">
+    </form> -->
+    <!-- <br><a href="/users/delete/{{username}}"> <input type = "submit" id = "user_details_delete_submit" value = "DELETE"> </a> -->
+    <input type="button" value="DELETE" id = "user_details_delete_submit" onclick="window.location.href='/users/delete/{{username}}';">
+
 </body>
 </html>

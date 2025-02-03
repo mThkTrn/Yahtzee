@@ -13,11 +13,12 @@
 
     <ol id="games_list">
 
+      <p>{{username}} Games</p>
       {% for game in gameslist %}
 
       <li>
-        <a href = "/games/{{game['name']}}/{{username}}">{{game}}</a>
-        <a href="/games/delete/{{game['name']}}/{{username}}">DELETE></a>
+        <a href = "/games/{{game}}/{{username}}">{{game}}</a>
+        <a href="/games/delete/{{game}}/{{username}}">DELETE</a>
       </li>
 
       {% endfor %}
@@ -25,35 +26,21 @@
 
     </ol>
 
+    <form method = "post">
+      <input type="text" name = "game_name" id = "game_name_input">
+      <input type="hidden" name="username" value = "{{username}}" id = "username_input">
+      <input type="submit" value = "CREATE" id = "create_submit" formaction = "/games">
+      <input type="submit" value = "JOIN" id="join_submit">
+
+    </form>
+
     <ol id="high_scores_list">
+      <p>Your High Scores</p>
       {% for score in scoreslist %}
         <li>{{ score[1] }} : {{ score[0] }}</li>
       {% endfor %}
     </ol>
-    
-    <!-- <form action="/users" method="post">
-        <input type="hidden" name="user_id" id="user_id_input" value="{{user_id}}" readonly>
-        <label for="email">Email:</label>
-        <input type="text" name="email" id="email_input" value = "{{email}}">
 
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username_input" value = "{{username}}">
-
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password_input" value = "{{password}}">
-
-        {% if purpose == "update" %}
-
-        <!-- Submit Button 2 -->
-        <input type="submit" formaction="/users/update" 
-               name="update" value="UPDATE" id="user_details_submit">
-        {% else %}
-        <input type="submit" value="CREATE" id = "user_details_submit">
-        {% endif %}
-        
-    </form> -->
-        <input type="text" name="user_id" id="user_id_input" value="{{user_id}}" readonly display = "none">
-    <input type="submit" name="delete" value="DELETE" id = "user_details_delete_submit">
     </form>
 </body>
 </html>

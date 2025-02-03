@@ -4,11 +4,11 @@ import sqlite3
 import random
 import json
 import os
-from UserModel import User
-from GameModel import Game
+from User_Model import User
+from Game_Model import Game
 
 class Scorecard:
-    def __init__(self, db_name, scorecard_table_name="scorecards", user_table_name="users", game_table_name="games"):
+    def __init__(self, db_name, scorecard_table_name="scorecard", user_table_name="users", game_table_name="games"):
         self.db_name =  db_name
         self.max_safe_id = 9007199254740991 #maximun safe Javascript integer
         self.table_name = scorecard_table_name 
@@ -215,7 +215,7 @@ class Scorecard:
             if not cursor.execute(f"SELECT * FROM {self.table_name} WHERE id = {id}").fetchall():
                 return {"status" : "error", "data" : "scorecard does not exist."}
 
-            execstring = f"UPDATE {self.table_name} SET name = '{name}', categories = '{json.dumps(categories)}'"
+            execstring = f"UPDATE {self.table_name} SET name = '{name}', categories = '{json.dumps(categories)}' WHERE id = {id}"
 
             print(execstring)
             cursor.execute(execstring)
@@ -307,7 +307,13 @@ class Scorecard:
         # print("ScorecardModel", results)
 
         print("---")
-        print("three_of_a_kind", (self.tally_score(json.loads(results[0][0])), results[0][1]))
+        # print("three_of_a_kind", (self.tally_score(json.loads(results[0][0])), results[0][1]))
+
+        print("---results---")
+
+        print(results)
+
+        print("---end results ---")
 
         resultslist = [(self.tally_score(json.loads(k[0])), k[1]) for k in results]
         
@@ -318,6 +324,28 @@ class Scorecard:
         print("ScorecardModel", resultslist)
 
         return {"status" : "success", "data" : resultslist}
+    
+    def get_scorecard_id_user_game_name(self, user_name, game_name):
+        try: 
+            db_connection = sqlite3.connect(self.db_name)
+            cursor = db_connection.cursor()
+            query = f'''
+                        SELECT scorecard.id FROM
+                        {self.game_table_name} as game JOIN {self.table_name} as scorecard ON game.id = scorecard.game_id
+                        JOIN {self.user_table_name} as user ON scorecard.user_id = user.id
+                        WHERE user.username = '{user_name}' AND game.name = '{game_name}'
+                    '''
+            results = cursor.execute(query).fetchall()
+
+            resultid = results[0][0]
+
+            return {"status" : "success", "data" : resultid}
+
+        except sqlite3.Error as error:
+            return {"status":"error",
+                    "data":error}
+        finally:
+            db_connection.close()
 
 
 if __name__ == '__main__':
@@ -326,11 +354,11 @@ if __name__ == '__main__':
     DB_location=f"{os.getcwd()}/yahtzeeDB.db"
     #print("location", DB_location)
     Users = User(DB_location, "users")
-
+    
     Users.initialize_table()
     Games = Game(DB_location, "games")
     Games.initialize_table()
-    Scorecards = Scorecard(DB_location, "scorecards", "users", "games")
+    Scorecards = Scorecard(DB_location, "scorecard", "users", "games")
     Scorecards.initialize_table()
 
     statedict = '''{

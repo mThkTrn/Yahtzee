@@ -15,6 +15,7 @@ class User:
         self.table_name = table_name
     
     def initialize_table(self):
+        print(self.db_name)
         db_connection = sqlite3.connect(self.db_name)
         cursor = db_connection.cursor()
         schema=f"""

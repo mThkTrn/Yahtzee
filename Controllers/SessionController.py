@@ -1,13 +1,14 @@
 from flask import jsonify
 from flask import request
 from flask import render_template
+from flask import redirect
 import os
 
-from Models import UserModel
+from Models import User_Model
 
 DB_location=f"{os.getcwd()}/Models/yahtzeeDB.db"
 table_name = "users"
-Users = UserModel.User(DB_location, table_name)
+Users = User_Model.User(DB_location, table_name)
 
 # def fruit():
 #     print(f"request.method= {request.method} request.url={request.url}")
@@ -40,7 +41,7 @@ def login():
 
     try:
         if out["data"]["password"] == user_info["password"]:
-            return render_template("user_games.html")
+            return redirect(f"games/{user_info['username']}")
         else:
             message = out["data"]
             return render_template("login.html", message = message)
